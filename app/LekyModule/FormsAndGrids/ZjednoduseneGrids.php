@@ -56,14 +56,24 @@ class ZjednoduseneGridFactory extends \App\Factory\BaseDataGridFactory {
      
 
       
-
+  $pojistovnyNazvy = [
+        '111' => '111 - VZP',
+        '201' => '201 - VoZP', 
+        '205' => '205 - ČPZP',
+        '207' => '207 - OZP',
+        '209' => '209 - ZPŠ',
+        '211' => '211 - ZPMV',
+        '213' => '213 - RBP'
+    ];
    
         $pojistovny = ['111', '201', '205', '207', '209', '211', '213'];
 
         foreach ($pojistovny as $value) {
-            $grid->addColumnText($value . '_STAV', $value . ' Stav')
-                 ->setSortable()
-                 ->setRenderer(function ($item) use ($value) {
+        $nazev = $pojistovnyNazvy[$value] ?? $value; 
+        
+        $grid->addColumnText($value . '_STAV', $nazev . ' ')  
+             ->setSortable()
+             ->setRenderer(function ($item) use ($value) {
                      $el = Html::el('div');
                      $el->class($item["poj" . $value . "_BARVA"]);
                      if ($item[$value . "_STAV"] == 'Nasmlouváno') {
@@ -85,7 +95,7 @@ class ZjednoduseneGridFactory extends \App\Factory\BaseDataGridFactory {
        
         $grid->setItemsDetail(true, "ID_LEKY")
              ->setClass("btn btn-primary btn-sm ajax")
-             ->setTitle("Diagnostické skupiny")
+             ->setTitle("Detail")
              ->setText("Detail (Info)")
              ->setIcon("arrow-down")
              ->setTemplateParameters(["ID_LEKY"=>"ID_LEKY"])
