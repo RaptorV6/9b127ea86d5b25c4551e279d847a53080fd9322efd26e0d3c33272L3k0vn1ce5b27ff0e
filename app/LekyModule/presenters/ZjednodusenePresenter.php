@@ -270,16 +270,23 @@ public function handleInlineEdit($id) {
     if ($id_leky) {
         $lek = $this->BaseModel->getLeky($id_leky);
         
-        // Pro zjednodušenou verzi je organizace vždy 'MUS'
-        $lek['ORGANIZACE'] = 'MUS'; 
+        if ($lek && isset($lek->ORGANIZACE)) {
+            // Použij organizaci z databáze při editaci
+            $lek['ORGANIZACE'] = explode(', ', $lek->ORGANIZACE);
+        } else {
+            // Pro nový lék nastav MUS jako výchozí
+            $lek['ORGANIZACE'] = ['MUS']; 
+        }
         
         $lek['POJ'] = [];
         $values = '';
 
-        $org = 'MUS';
-        $lek[$org] = \Nette\Utils\ArrayHash::from($this->BaseModel->getPojistovny($id_leky, $org));
-        if (isset($lek[$org])) {
-            foreach ($lek[$org] as $value => $key) {
+     $organizace_leku = is_array($lek['ORGANIZACE']) ? $lek['ORGANIZACE'] : ['MUS'];
+        
+        foreach ($organizace_leku as $org) {
+            $lek[$org] = \Nette\Utils\ArrayHash::from($this->BaseModel->getPojistovny($id_leky, $org));
+            if (isset($lek[$org])) {
+                foreach ($lek[$org] as $value => $key) {
                 if ($lek[$org][$value]['RL'] === '') {
                     $lek[$org][$value]['RL'] = '';
                 } elseif ($lek[$org][$value]['RL'] == 1 || $lek[$org][$value]['RL'] == 0) {
@@ -294,6 +301,7 @@ public function handleInlineEdit($id) {
                 }
             }
         }
+    }
         if ($values) {
             $lek['POJ'] = explode(', ', trim($values, ", "));
         }
@@ -372,7 +380,6 @@ public function zjednoduseneFormSucceeded($form) {
     
     $this->LogyModel->insertLog(\App\LekyModule\Model\Leky::AKESO_LEKY, $values, $this->user->getId());
     
-    // ✅ OPRAVA - jen vybrané organizace
     foreach ($values->ORGANIZACE as $org) {
         if (isset($values[$org])) {
             foreach (['111', '201', '205', '207', '209', '211', '213'] as $pojKey) {
@@ -409,7 +416,6 @@ public function zjednoduseneFormSucceeded($form) {
         }
     }
     
-    // ✅ OPRAVA - ukládej pro každou vybranou organizaci
     if (is_array($values->ORGANIZACE)) {
         foreach ($values->ORGANIZACE as $org) {
             $tempValues = clone $values;
