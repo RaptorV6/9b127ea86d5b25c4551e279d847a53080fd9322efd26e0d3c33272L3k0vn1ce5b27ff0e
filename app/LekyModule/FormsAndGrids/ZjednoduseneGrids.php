@@ -33,23 +33,29 @@ class ZjednoduseneGridFactory extends \App\Factory\BaseDataGridFactory {
              ->setFilterText()
              ->setSplitWordsSearch(true);
 
-        $grid->addColumnText('POZNAMKA', 'Poznámka pro všechny ZP')
+                $grid->addColumnText('BIOSIMOLAR', 'Biosimilar')
              ->setSortable()
              ->setFilterText();
 
-        $grid->addColumnText('UCINNA_LATKA', 'Učinná látka')
-             ->setSortable()
-             ->setFilterText();
-
-        $grid->addColumnText('BIOSIMOLAR', 'Biosimilar')
-             ->setSortable()
-             ->setFilterText();
-
-        $grid->addColumnText('ATC', 'ATC')
+               $grid->addColumnText('ATC', 'ATC')
              ->setSortable()
              ->setReplacement(["" => "-"])
              ->setFilterText()
              ->setSplitWordsSearch(true);
+
+                     $grid->addColumnText('UCINNA_LATKA', 'Učinná látka')
+             ->setSortable()
+             ->setFilterText();
+
+        $grid->addColumnText('POZNAMKA', 'Poznámka pro všechny ZP')
+             ->setSortable()
+             ->setFilterText();
+
+
+
+     
+
+      
 
    
         $pojistovny = ['111', '201', '205', '207', '209', '211', '213'];

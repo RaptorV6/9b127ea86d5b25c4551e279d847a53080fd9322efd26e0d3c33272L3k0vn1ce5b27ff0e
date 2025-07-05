@@ -71,16 +71,30 @@ public function getDataSourceGrouped($organizace = null, $history = null) {
             MAX([201_POZNAMKA]) as [201_POZNAMKA],
             MAX(poj201_BARVA) as poj201_BARVA,
             
-            MAX([205_STAV]) as [205_STAV],
-            MAX(poj205_BARVA) as poj205_BARVA,
-            MAX([207_STAV]) as [207_STAV],
-            MAX(poj207_BARVA) as poj207_BARVA,
-            MAX([209_STAV]) as [209_STAV],
-            MAX(poj209_BARVA) as poj209_BARVA,
-            MAX([211_STAV]) as [211_STAV],
-            MAX(poj211_BARVA) as poj211_BARVA,
-            MAX([213_STAV]) as [213_STAV],
-            MAX(poj213_BARVA) as poj213_BARVA
+          MAX([205_STAV]) as [205_STAV],
+MAX([205_NASMLOUVANO_OD]) as [205_NASMLOUVANO_OD],  
+MAX([205_POZNAMKA]) as [205_POZNAMKA],              
+MAX(poj205_BARVA) as poj205_BARVA,
+
+MAX([207_STAV]) as [207_STAV],
+MAX([207_NASMLOUVANO_OD]) as [207_NASMLOUVANO_OD],  
+MAX([207_POZNAMKA]) as [207_POZNAMKA],              
+MAX(poj207_BARVA) as poj207_BARVA,
+
+MAX([209_STAV]) as [209_STAV], 
+MAX([209_NASMLOUVANO_OD]) as [209_NASMLOUVANO_OD],  
+MAX([209_POZNAMKA]) as [209_POZNAMKA],              
+MAX(poj209_BARVA) as poj209_BARVA,
+
+MAX([211_STAV]) as [211_STAV],
+MAX([211_NASMLOUVANO_OD]) as [211_NASMLOUVANO_OD],  
+MAX([211_POZNAMKA]) as [211_POZNAMKA],              
+MAX(poj211_BARVA) as poj211_BARVA,
+
+MAX([213_STAV]) as [213_STAV],
+MAX([213_NASMLOUVANO_OD]) as [213_NASMLOUVANO_OD],  
+MAX([213_POZNAMKA]) as [213_POZNAMKA],              
+MAX(poj213_BARVA) as poj213_BARVA
             
         FROM %n 
         WHERE $whereClause
