@@ -1,0 +1,67 @@
+﻿{* Latte template *}
+{layout '../@layout.latte'}
+
+{block content}
+    <div id="content">
+     {if $prava == '9'}  
+        {form userForm}
+        <fieldset>
+            <a n:href="User:default"><big>Zpět</big></a>
+                <article>
+                    <table class="lekovnice">
+                      <tr>
+                        <th colspan="2">Uživatel</th>
+                      </tr>
+                      <tr>
+                        <td>{label osobni_cislo /}</td>
+                        <td>{input osobni_cislo}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label jmeno /}</td>
+                        <td>{input jmeno}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label prijmeni /}</td>
+                        <td>{input prijmeni}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label password /}</td>
+                        <td>{input password}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label prava /}</td>
+                        <td>{input prava}</td>
+                      </tr>
+                      <tr>
+                        <td>{label preferovana_organizace /}</td>
+                        <td>{input preferovana_organizace}</td>
+                      </tr>
+                      <tr>
+                        <td>Aktivní uživatel</td>
+                        <td>{input active}</td>
+                      </tr>
+					            <tr id="poj">
+                        <td>Editace\Nová pojišťovna</td>
+                        <td>{input modul_poj}</td>
+                      </tr>
+					            <tr id="fin">
+                        <td>Editace\Nová Finance</td>
+                        <td>{input modul_fin}</td>
+                      </tr>
+					            <tr id="lek">
+                        <td>Editace\Nová Lékař</td>
+                        <td>{input modul_lek}</td>
+                      </tr>
+                      <tr>
+                          <td colspan="2">{input send}</td>
+                      </tr>
+                    </table>
+                </article>
+        </fieldset>
+      {/form}
+      {else}
+        <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}  
+    </div>
+{/block}
+

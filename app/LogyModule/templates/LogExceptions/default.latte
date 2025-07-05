@@ -1,0 +1,104 @@
+{* Latte template *}
+
+{block content}
+{if $prava=="9"}
+<div id="content">
+<br>
+<h1>Log výjimek</h1>
+</div>
+
+{include date_filter_div}
+
+{control logExceptionsGrid}
+
+{/if}
+{/block}
+
+{block scripts}
+{include parent}
+
+
+{include date_filter_script}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        registerBoxInfo();
+    });
+    
+    function registerBoxInfo() {
+        $('.box-info-area').mouseover(function() {
+            $(this).find('.box-info').css('display', 'block');
+        });
+        $('.box-info-area').mouseout(function() {
+            $(this).find('.box-info').css('display', 'none');
+        });
+        window.setTimeout(registerBoxInfo, 1000);
+    }
+</script>
+{/block}
+
+{block head}
+<style>
+    .box-info span.highlight {
+        background: #CD1818;
+        color: white;
+        font-weight: bold;
+        font-style: normal;
+        display: block;
+        padding: 0 .4em;
+        margin: 0 -.4em;
+    }
+    .box-info {
+        display: none;
+        cursor: default; 
+        position: absolute;
+        background-color: #FFFFFF;
+        padding: 20px;
+        width: calc(100% - 200px);
+        left: 100px;
+        border: 1px solid #CACACA;
+        border-radius: 5px;
+        text-align: left;
+    }
+    #logExceptionsGrid td {
+        word-wrap: break-word;
+        max-width: 1px;
+    }
+    .grid-header-time {
+        width: 6% !important;
+    }
+    .grid-header-priority {
+        width: 4% !important;
+    }
+    .grid-header-type {
+        width: 5% !important;
+    }
+    .grid-header-url {
+        width: 18% !important;
+    }
+    .grid-header-req_variables {
+        width: 6% !important;
+    }
+    .grid-header-message {
+        width: 18% !important;
+    }
+    .grid-header-file {
+        width: 18% !important;
+    }
+    .grid-header-line {
+        width: 4% !important;
+    }
+    .grid-header-source_code {
+        width: 6% !important;
+    }
+    .grid-header-personal_number {
+        width: 4% !important;
+    }
+    .grid-header-addit_info {
+        width: 6% !important;
+    }
+    .grido th.actions {
+        width: 5% !important;
+    }
+</style>
+{/block}

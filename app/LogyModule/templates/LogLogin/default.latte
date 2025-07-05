@@ -1,0 +1,28 @@
+{layout '../../../presenters/templates/@layout.latte'}
+
+{block moduleLayout}
+
+{block content}
+{if $prava=="9"}
+<div id="content">
+<h1>Log přihlášení uživatelů</h1>
+
+{control logLoginGrid}
+</div>
+{/if}
+{/block}
+
+
+{block scripts}
+{include #parent}
+
+<script type="text/javascript">
+</script>
+
+{/block}
+
+{block head}
+<style>
+</style>
+
+{/block}

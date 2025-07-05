@@ -1,0 +1,13 @@
+﻿{* Latte template *}
+{layout '../@layout.latte'}
+
+{block content}
+    <div id="content">
+        {if $prava == '9'}
+            {control atcsDataGrid}
+        {else}
+            <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+        {/if}    
+    </div>
+{/block}
+

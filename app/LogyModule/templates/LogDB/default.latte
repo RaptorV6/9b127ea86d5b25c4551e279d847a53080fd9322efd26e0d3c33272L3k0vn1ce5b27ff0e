@@ -1,0 +1,96 @@
+{* Latte template *}
+
+{block content}
+{if $prava=="9"}
+<div id="content">
+<br>
+<h1>Log změn v tabulkách</h1>
+
+{default $showNotesList = FALSE}
+{if $showNotesList}
+     <div id="form"><h4>{$datumcas} uživatel <span style="color: blue;">{$username}</span> provedl v tabulce <span style="color: blue;">{$tablename}</span> <span style="color: red;">{$typtxt}</span>:</h4></div>
+     <div id="table">
+     <table>
+         <tr>
+             <td width="300"><b>Field</b></td>
+             {if $typzmeny===2||$typzmeny===3}<td width="300"><b>Původní hodnota</b></td>{/if}
+             {if $typzmeny===1||$typzmeny===3}<td width="300"><b>Nová hodnota</b></td>{/if}
+         </tr>
+                 
+{foreach $zmeny as $field=>$hodnoty}
+         <tr>
+             <td><b>{$field}</b></td>            
+             {if $typzmeny===2||$typzmeny===3}
+                 <td>
+                     {var $oldvalue=$hodnoty["old"]}
+                     {if $typzmeny===3}
+                         {var $newvalue=$hodnoty["new"]}
+                         {if !($oldvalue===$newvalue)}
+                             <b><span style="color: red;">{$oldvalue}</span></b>
+                         {else}      
+                            {$oldvalue}                    
+                         {/if}
+                     {else}      
+                        {$oldvalue}                    
+                     {/if}
+                 </td>
+             {/if}
+             {if $typzmeny===1||$typzmeny===3}
+                 <td>
+                     {var $newvalue=$hodnoty["new"]}
+                     {if $typzmeny===3}
+                         {var $oldvalue=$hodnoty["old"]}
+                         {if !($oldvalue===$newvalue)}
+                             <b><span style="color: red;">{$newvalue}</span></b>
+                         {else}      
+                            {$newvalue}                    
+                         {/if}
+                     {else}      
+                        {$newvalue}                    
+                     {/if}
+                 </td>
+             {/if}
+         </tr>
+{/foreach}
+
+         
+     </table>
+{/if}
+
+
+{control logDBGrid}
+</div>
+{/if}
+{/block}
+
+
+{block scripts}
+{include #parent}
+
+{include date_filter_script}
+
+<script type="text/javascript">
+    
+$("#add_auto").click(function(){
+   $("#form").toggle("slow");
+});
+
+</script>
+
+{/block}
+
+{block head}
+<style>
+    #add_auto{ 
+        margin-bottom:20px;
+    }
+    
+    .dispNone{
+        display: none
+    }
+    
+    .dispBlock{
+        display: block
+    }
+</style>
+{/block}

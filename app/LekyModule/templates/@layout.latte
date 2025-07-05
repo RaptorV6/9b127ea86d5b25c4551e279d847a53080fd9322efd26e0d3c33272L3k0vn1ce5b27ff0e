@@ -1,0 +1,13 @@
+{layout '../../Presenters/templates/@layout.latte'}
+{block title}
+    {if $presenter->getAction() === 'new'}Přidat - {/if}
+    {$nazev}
+{/block}
+
+{block moduleLayout}
+    <div id="content">
+        
+        {include content}
+    </div>
+{/block}
+

@@ -1,0 +1,43 @@
+﻿{* Latte template *}
+{layout '../@layout.latte'}
+
+{block content}
+    <div id="content">
+     {if $prava == '9'}  
+		 {form atcsForm}
+        <fieldset>
+            <a n:href=":default"><big>Zpět</big></a>
+                <article>
+                    <table class="lekovnice">
+                      <tr>
+                        <th colspan="2">ATC</th>
+                      </tr>
+                      <tr>
+                        <td>{label ID_SADY /}</td>
+                        <td>{input ID_SADY}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label ATC /}</td>
+                        <td>{input ATC}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label ANGL_NAZEV /}</td>
+                        <td>{input ANGL_NAZEV}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label CESKY_NAZEV /}</td>
+                        <td>{input CESKY_NAZEV}</td>
+                      </tr>
+                      <tr>
+                          <td colspan="2">{input send}</td>
+                      </tr>
+                    </table>
+                </article>
+        </fieldset>
+      {/form}
+      {else}
+        <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}  
+    </div>
+{/block}
+

@@ -1,0 +1,63 @@
+{* Latte template *}
+
+{block content}
+    <div id="content">
+      {if $prava == '9' || $prava == '2'}  
+        {form hromadiagForm}
+        <div n:if="$form->hasErrors()" n:foreach="$form->errors as $error" n:class="alert, 'alert-danger'"><span>{$error}</span></div>   
+        <fieldset>
+            <a n:href="Leky:default"><big>Zpět</big></a>
+                <article>
+				<table class="lekovnice">
+                  <tr>
+                        <th colspan="5">Identifikátory léku ({$id})</th>
+                  </tr>
+				  <tr>
+					<td>{label ORGANIZACE /}</td>
+					<td>{input ORGANIZACE}</td>
+					<td>{label POJ /}</td>
+					<td colspan="2">{input POJ}</td>
+				  </tr>
+					{foreach $form["DG"]->getContainers() as $key => $dg}
+						<tr>
+							<th colspan="5">DG skupna {$key+1}</th>
+						</tr>
+						<tr>
+							<td>{label DG-{$key}-DG_NAZEV /}</td>
+							<td colspan="2">{input DG-{$key}-DG_NAZEV}</td>
+							<td><label>VILP</label></td>
+							<td>{input DG-{$key}-VILP}</td>
+						</tr>
+						<tr>
+							<td>{label DG-{$key}-DG_PLATNOST_OD}</td>
+							<td>{input DG-{$key}-DG_PLATNOST_OD}</td>
+							<td>{label DG-{$key}-DG_PLATNOST_DO}</td>
+							<td>{input DG-{$key}-DG_PLATNOST_DO}</td>
+							<td>{input DG-{$key}-remove}</td>
+						</tr>
+					{/foreach}
+					<tr>
+						<td colspan="5">{input DG-add}</td>
+					</tr>
+					<tr>
+						<th colspan="5">{input send}</th>
+					</tr>
+				</table>
+			</article>
+        </fieldset>
+        {/form}
+      {else}
+         <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}    
+    </div>
+{/block}
+{block scripts}
+{include #parent}
+<script type="text/javascript">
+	$($("[data-autocomplete-dg]")).autocomplete({
+		source: {link Dgskup!}, 
+		minLength: 1
+	});
+</script>
+
+{/block}

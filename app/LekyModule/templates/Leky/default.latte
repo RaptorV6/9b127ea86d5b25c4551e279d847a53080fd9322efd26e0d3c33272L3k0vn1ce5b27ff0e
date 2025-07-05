@@ -1,0 +1,106 @@
+﻿{* Latte template *}
+{layout '../@layout.latte'}
+
+
+{block content}
+    <div id="content">
+        {control lekyDataGrid}
+    </div>
+{/block}
+{block head}
+{if $prava == 1 || $modul_poj == 0}
+<style>
+	.col-checkbox{
+		display: none !important;
+	}
+</style>
+{/if}
+<style>
+
+.checkbox {
+  position: relative;
+  background: white;
+  width: 100px;
+  height: 26px;
+  justify-content: flex-end;
+  -webkit-appearance: initial;
+  border-radius: 20px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  outline: none;
+  font-size: 14px;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.checkbox:after {
+  position: absolute;
+  top: 5%;
+  display: block;
+  line-height: 32px;
+  width: 45%;
+  height: 90%;
+  background: #0984FF;
+  cursor: pointer;
+  transition: all 0.5s linear;
+  -webkit-transition: all 0.5s linear;
+  -moz-transition: all 0.5s linear;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  /*opacity: 0.5;*/
+  border-radius: 50px 50px 50px;
+}
+
+.checkbox:after {
+  left: 2%;
+  content: "Ne";
+  padding-left: 5px;
+  color: lightcoral;
+  font: 15px/26px Arial, sans-serif;
+  font-weight: bold;
+  text-transform: capitalize;
+  z-index: 0;
+}
+
+.checkbox:checked:after {
+  left: 53%;
+  content: "Ano";
+  padding-left: 5px;
+  color: lightgreen;
+  font: 15px/26px Arial, sans-serif;
+  font-weight: bold;
+  text-transform: capitalize;
+  z-index: 0;
+}
+.red{
+  background-color: red;
+  color:white;
+}
+.green{
+  background-color: green;
+  color:white;	
+}
+.yellow{
+  background-color: #FF8C00;
+  color:white;	
+}
+.lightgreen{
+ background-color: #50F354;
+ //color:white;	
+}
+.dark{
+ background-color: #2F4F4F;
+ color:white;	
+}
+.empty{
+ background-color: #566573;
+ color:white;
+}
+.darkred{
+ background-color: #590505;
+ color:white;	
+}
+</style>
+{/block}

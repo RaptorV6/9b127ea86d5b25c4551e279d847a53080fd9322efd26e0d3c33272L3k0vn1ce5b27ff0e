@@ -1,0 +1,155 @@
+{block content}
+    <div id="content">
+      {if $prava == '9' || $prava == '2'}  
+        {form zjednoduseneForm}
+        <div n:if="$form->hasErrors()" n:foreach="$form->errors as $error" n:class="alert, 'alert-danger'"><span>{$error}</span></div>   
+        <fieldset>
+                <article>
+                    <table class="lekovnice">
+                      <tr>
+                        <th colspan="2">Základní informace</th>
+                      </tr>
+                      <tr>
+                        <td>{label ATC /}</td>
+                        <td>{input ATC}</td>
+                      </tr>
+                      <tr>
+                        <td>{label NAZ /}</td>
+                        <td>{input NAZ}</td>
+                      </tr>
+                      <tr>
+                        <td>{label POZNAMKA /}</td>
+                        <td>{input POZNAMKA}</td>
+                      </tr>
+                      <tr>
+                        <td>{label UCINNA_LATKA /}</td>
+                        <td>{input UCINNA_LATKA}</td>
+                      </tr>
+                      <tr>
+                        <td>{label BIOSIMOLAR /}</td>
+                        <td>{input BIOSIMOLAR}</td>
+                      </tr>
+                      <tr>
+                        <td>{label ORGANIZACE /}</td>
+                        <td>{input ORGANIZACE}</td>
+                      </tr>
+                      <tr>
+                        <td>{label POJ /}</td>
+                        <td>{input POJ}</td>
+                      </tr>
+                    </table>
+
+                    {* ✅ FIXNÍ ORGANIZACE S JS TOGGLE *}
+                    <div id="NH">
+                        {foreach ['111', '201', '205', '207', '209', '211', '213'] as $poj}
+                            <table class="lekovnice" id="p{$poj}_pojistovna">
+                              <tr><th colspan="5">Organizace: NH zdravotní pojištovna {$poj}</th></tr>
+                              <tr><td>{label NH-{$poj}-STAV /}</td><td colspan="4">{input NH-{$poj}-STAV}</td></tr>
+                              <tr id="NASMLOUVANO_DATANH{$poj}"><td>{label NH-{$poj}-NASMLOUVANO_OD /}</td><td colspan="4">{input NH-{$poj}-NASMLOUVANO_OD}</td></tr>
+                              <tr><td><label>Revizák</label></td><td colspan="4">{input NH-{$poj}-Revizak}</td></tr>
+                              <tr id="revizakNH{$poj}"><td>{label NH-{$poj}-RL /}</td><td colspan="4">{input NH-{$poj}-RL}</td></tr>
+                              <tr><td>{label NH-{$poj}-POZNAMKA /}</td><td colspan="4">{input NH-{$poj}-POZNAMKA}</td></tr>
+                              <tr><td colspan="5" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></b></td></tr>
+                              {foreach $form["NH-{$poj}-DG"]->getContainers() as $key => $dg}
+                                  <tr><td>{label NH-{$poj}-DG-{$key}-DG_NAZEV /}</td><td colspan="2">{input NH-{$poj}-DG-{$key}-DG_NAZEV}</td><td><label>VILP</label></td><td>{input NH-{$poj}-DG-{$key}-VILP}</td></tr>
+                                  <tr><td>{label NH-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td><td>{input NH-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td><td>{label NH-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td><td>{input NH-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td><td>{input NH-{$poj}-DG-{$key}-remove}</td></tr>
+                              {/foreach}
+                              <tr><td colspan="5">{input NH-{$poj}-DG-add}</td></tr>
+                            </table>
+                        {/foreach}
+                    </div>
+
+                    <div id="RNB">
+                        {foreach ['111', '201', '205', '207', '209', '211', '213'] as $poj}
+                            <table class="lekovnice" id="p{$poj}_pojistovna">
+                              <tr><th colspan="5">Organizace: RNB zdravotní pojištovna {$poj}</th></tr>
+                              <tr><td>{label RNB-{$poj}-STAV /}</td><td colspan="4">{input RNB-{$poj}-STAV}</td></tr>
+                              <tr id="NASMLOUVANO_DATARNB{$poj}"><td>{label RNB-{$poj}-NASMLOUVANO_OD /}</td><td colspan="4">{input RNB-{$poj}-NASMLOUVANO_OD}</td></tr>
+                              <tr><td><label>Revizák</label></td><td colspan="4">{input RNB-{$poj}-Revizak}</td></tr>
+                              <tr id="revizakRNB{$poj}"><td>{label RNB-{$poj}-RL /}</td><td colspan="4">{input RNB-{$poj}-RL}</td></tr>
+                              <tr><td>{label RNB-{$poj}-POZNAMKA /}</td><td colspan="4">{input RNB-{$poj}-POZNAMKA}</td></tr>
+                              <tr><td colspan="5" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></b></td></tr>
+                              {foreach $form["RNB-{$poj}-DG"]->getContainers() as $key => $dg}
+                                  <tr><td>{label RNB-{$poj}-DG-{$key}-DG_NAZEV /}</td><td colspan="2">{input RNB-{$poj}-DG-{$key}-DG_NAZEV}</td><td><label>VILP</label></td><td>{input RNB-{$poj}-DG-{$key}-VILP}</td></tr>
+                                  <tr><td>{label RNB-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td><td>{input RNB-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td><td>{label RNB-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td><td>{input RNB-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td><td>{input RNB-{$poj}-DG-{$key}-remove}</td></tr>
+                              {/foreach}
+                              <tr><td colspan="5">{input RNB-{$poj}-DG-add}</td></tr>
+                            </table>
+                        {/foreach}
+                    </div>
+
+                    <div id="MUS">
+                        {foreach ['111', '201', '205', '207', '209', '211', '213'] as $poj}
+                            <table class="lekovnice" id="p{$poj}_pojistovna">
+                              <tr><th colspan="5">Organizace: MUS zdravotní pojištovna {$poj}</th></tr>
+                              <tr><td>{label MUS-{$poj}-STAV /}</td><td colspan="4">{input MUS-{$poj}-STAV}</td></tr>
+                              <tr id="NASMLOUVANO_DATAMUS{$poj}"><td>{label MUS-{$poj}-NASMLOUVANO_OD /}</td><td colspan="4">{input MUS-{$poj}-NASMLOUVANO_OD}</td></tr>
+                              <tr><td><label>Revizák</label></td><td colspan="4">{input MUS-{$poj}-Revizak}</td></tr>
+                              <tr id="revizakMUS{$poj}"><td>{label MUS-{$poj}-RL /}</td><td colspan="4">{input MUS-{$poj}-RL}</td></tr>
+                              <tr><td>{label MUS-{$poj}-POZNAMKA /}</td><td colspan="4">{input MUS-{$poj}-POZNAMKA}</td></tr>
+                              <tr><td colspan="5" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></b></td></tr>
+                              {foreach $form["MUS-{$poj}-DG"]->getContainers() as $key => $dg}
+                                  <tr><td>{label MUS-{$poj}-DG-{$key}-DG_NAZEV /}</td><td colspan="2">{input MUS-{$poj}-DG-{$key}-DG_NAZEV}</td><td><label>VILP</label></td><td>{input MUS-{$poj}-DG-{$key}-VILP}</td></tr>
+                                  <tr><td>{label MUS-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td><td>{input MUS-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td><td>{label MUS-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td><td>{input MUS-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td><td>{input MUS-{$poj}-DG-{$key}-remove}</td></tr>
+                              {/foreach}
+                              <tr><td colspan="5">{input MUS-{$poj}-DG-add}</td></tr>
+                            </table>
+                        {/foreach}
+                    </div>
+
+                    <div id="DCNH">
+                        {foreach ['111', '201', '205', '207', '209', '211', '213'] as $poj}
+                            <table class="lekovnice" id="p{$poj}_pojistovna">
+                              <tr><th colspan="5">Organizace: DCNH zdravotní pojištovna {$poj}</th></tr>
+                              <tr><td>{label DCNH-{$poj}-STAV /}</td><td colspan="4">{input DCNH-{$poj}-STAV}</td></tr>
+                              <tr id="NASMLOUVANO_DATADCNH{$poj}"><td>{label DCNH-{$poj}-NASMLOUVANO_OD /}</td><td colspan="4">{input DCNH-{$poj}-NASMLOUVANO_OD}</td></tr>
+                              <tr><td><label>Revizák</label></td><td colspan="4">{input DCNH-{$poj}-Revizak}</td></tr>
+                              <tr id="revizakDCNH{$poj}"><td>{label DCNH-{$poj}-RL /}</td><td colspan="4">{input DCNH-{$poj}-RL}</td></tr>
+                              <tr><td>{label DCNH-{$poj}-POZNAMKA /}</td><td colspan="4">{input DCNH-{$poj}-POZNAMKA}</td></tr>
+                              <tr><td colspan="5" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></b></td></tr>
+                              {foreach $form["DCNH-{$poj}-DG"]->getContainers() as $key => $dg}
+                                  <tr><td>{label DCNH-{$poj}-DG-{$key}-DG_NAZEV /}</td><td colspan="2">{input DCNH-{$poj}-DG-{$key}-DG_NAZEV}</td><td><label>VILP</label></td><td>{input DCNH-{$poj}-DG-{$key}-VILP}</td></tr>
+                                  <tr><td>{label DCNH-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td><td>{input DCNH-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td><td>{label DCNH-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td><td>{input DCNH-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td><td>{input DCNH-{$poj}-DG-{$key}-remove}</td></tr>
+                              {/foreach}
+                              <tr><td colspan="5">{input DCNH-{$poj}-DG-add}</td></tr>
+                            </table>
+                        {/foreach}
+                    </div>
+
+                    <table class="lekovnice" style="position: sticky; bottom: 0; left: 0; width: 100%; background: #225e9d;">
+                        <td style="width: 50%;"><a n:href="Zjednodusene:default" class="btn btn-danger btn-block">Zpět</a></td> 
+                        <td>{input send}</td>
+                    </table>
+                </article>
+        </fieldset>
+        {/form}
+      {else}
+         <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}    
+    </div>
+{/block}
+
+{block scripts}
+{include #parent}
+<script>
+// Multiselect onChange pro organizace - stejná logika jako v oficiální verzi
+$('#zjednoduseneForm-ORGANIZACE').change(function() {
+    var selected = $(this).val();
+    
+    // Skryj všechny organizace
+    $('#NH, #RNB, #MUS, #DCNH').hide();
+    
+    // Zobraz jen vybrané
+    if (selected && selected.length > 0) {
+        selected.forEach(function(org) {
+            $('#' + org).show();
+        });
+    }
+});
+
+// Spusť při načtení stránky
+$(document).ready(function() {
+    $('#zjednoduseneForm-ORGANIZACE').trigger('change');
+});
+</script>
+{/block}

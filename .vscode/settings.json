@@ -1,0 +1,10 @@
+{
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": ".*\\.php$",
+        "cmd": "powershell.exe -Command \"Get-ChildItem -Path 'temp/cache' -Recurse | Remove-Item -Force -Recurse\""
+      }
+    ]
+  }
+}

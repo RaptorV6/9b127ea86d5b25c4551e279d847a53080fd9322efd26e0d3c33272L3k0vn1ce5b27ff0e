@@ -1,0 +1,45 @@
+{* Latte template *}
+
+{block content}
+    <div id="content">
+        {if $prava == '9' || $prava == '2'}
+            {form lekyAtcSkupForm}
+            <div n:if="$form->hasErrors()" n:foreach="$form->errors as $error" n:class="alert, 'alert-danger'"><span>{$error}</span></div>   
+            <fieldset>
+                    <article>
+                        <table class="lekovnice">
+                          <tr>
+                            <th colspan="2">Indukační skupina</th>
+                          </tr>
+                          <tr>
+                            <td>{label ATC1 /}</td>
+                            <td>{input ATC1}</td>
+                          </tr>
+                          <tr>
+                            <td>{label POPIS /}</td>
+                            <td>{input POPIS}</td>
+                          </tr>
+                          <tr>
+                            <td>{label LECBA /}</td>
+                            <td>{input LECBA}</td>
+                          </tr>
+                          <tr>
+                            <td>{label PLATNOST_OD /}</td>
+                            <td>{input PLATNOST_OD}</td>
+                          </tr>
+                          <tr>
+                            <td>{label PLATNOST_DO /}</td>
+                            <td>{input PLATNOST_DO}</td>
+                          </tr>
+                        </table>  
+                      {input send}
+                    </article>
+            </fieldset>
+            {/form}
+        {else}
+            <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+        {/if}    
+    </div>
+{/block}
+
+

@@ -1,0 +1,365 @@
+{* Latte template *}
+
+{block content}
+    <div id="content">
+      {if $prava == '9' || $prava == '2'}  
+        {form lekyForm}
+        <div n:if="$form->hasErrors()" n:foreach="$form->errors as $error" n:class="alert, 'alert-danger'"><span>{$error}</span></div>   
+        <fieldset>
+        {*            <a n:href="Leky:default"><big>Zpět</big></a> 
+		   <legend></legend> *}
+                <article>
+                    <table class="lekovnice">
+                      <tr>
+                        <td>{label ID_LEKY /}</td>
+                        <td colspan="2">{input ID_LEKY}</td>
+						<td>{label NAZ /}</td>
+                        <td colspan="2">{input NAZ}</td>
+                      </tr>                                          
+                      <tr>
+                        <td>{label DOP /}</td>
+                        <td colspan="2">{input DOP}</td>
+						<td>{label SILA /}</td>
+                        <td colspan="2">{input SILA}</td>
+                      </tr>                                           
+                      <tr>
+                        <td>{label BALENI /}</td>
+                        <td colspan="2">{input BALENI}</td>
+						<td>{label BIOSIMOLAR /}</td>
+                        <td colspan="2">{input BIOSIMOLAR}</td>
+                      </tr>
+                      <tr>
+                        <td>{label POZNAMKA /}</td>
+                        <td colspan="2">{input POZNAMKA}</td>
+                        <td>{label UCINNA_LATKA /}</td>
+                        <td colspan="2">{input UCINNA_LATKA}</td>
+                      </tr>
+                      <tr>
+                        <td>{label ATC /}</td>
+                        <td colspan="2">{input ATC}</td>
+						<td>{label ATC3 /}</td>
+                        <td colspan="2">{input ATC3}</td>
+                      </tr>
+                      <tr class="fin">
+                        <td>{label UHR1 /}</td>
+                        <td>{input UHR1}</td>
+						<td>{label UHR2 /}</td>
+                        <td>{input UHR2}</td>
+						<td>{label UHR3 /}</td>
+                        <td>{input UHR3}</td>
+                      </tr>
+					  <tr class="fin">
+                        <td>{label CENA_FAKTURACE /}</td>
+                        <td colspan="2">{input CENA_FAKTURACE}</td>
+						<td>{label CENA_MAX /}</td>
+                        <td colspan="2">{input CENA_MAX}</td>
+                      </tr>
+					  <tr class="fin">
+                        <td>{label CENA_VYROBCE /}</td>
+                        <td colspan="2">{input CENA_VYROBCE}</td>
+						<td>{label CENA_VYROBCE_BEZDPH /}</td>
+                        <td colspan="2">{input CENA_VYROBCE_BEZDPH}</td>
+                      </tr>
+					  <tr class="fin">
+						<td>{label CENA_NAKUPNI /}</td>
+                        <td colspan="2">{input CENA_NAKUPNI}</td>
+						<td>{label CENA_SENIMED_BEZDPH /}</td>
+                        <td colspan="2">{input CENA_SENIMED_BEZDPH}</td>					
+					  </tr>
+					  <tr class="fin">
+						<td>{label CENA_MUS_PHARMA /}</td>
+                        <td>{input CENA_MUS_PHARMA}</td>
+                        <td>{label CENA_MUS_NC_BEZDPH /}</td>
+                        <td>{input CENA_MUS_NC_BEZDPH}</td>
+						<td>{label CENA_MUS_NC /}</td>
+                        <td>{input CENA_MUS_NC}</td>
+                      </tr>
+                      <tr class="fin">
+                        <td>{label UHRADA /}</td>
+                        <td>{input UHRADA}</td>
+						<td>{label KOMPENZACE /}</td>
+                        <td>{input KOMPENZACE}</td>
+						<td>{label BONUS /}</td>
+                        <td>{input BONUS}</td>
+                      </tr>
+					  <tr class="poj">
+                        <td>{label ORGANIZACE /}</td>
+                        <td colspan="2">{input ORGANIZACE}</td>
+                        <td>{label POJ /}</td>
+                        <td colspan="2">{input POJ}</td>
+                      </tr>
+                    </table>
+					<table id="vse" class="pojistovny poj">
+					  <tr>
+						<th colspan="5">(Pro vybrané organizace)(pro vybrané pojišťovny)</th>
+					  </tr>
+					  <tr>
+						<td>{label 0-0-STAV /}</td>
+						<td colspan="4">{input 0-0-STAV}</td>
+					  </tr>
+					  <tr id="NASMLOUVANO_DATA00">
+						<td>{label 0-0-NASMLOUVANO_OD /}</td>
+						<td colspan="4">{input 0-0-NASMLOUVANO_OD}</td>
+					  </tr>
+					  <tr>
+						<td>{label 0-0-ORG /}</td>
+						<td colspan="4">{input 0-0-ORG}</td>
+					  </tr>
+					  <tr>
+						<td>{label 0-0-POJISTOVNY /}</td>
+						<td colspan="4">{input 0-0-POJISTOVNY}</td>
+					  </tr>
+					  <tr>
+						  <td><label>Revizák</label></td>
+						  <td colspan="4">{input 0-0-Revizak}</td>
+					  </tr>
+					  <tr id="revizak00">
+						<td >{label 0-0-RL /}</td>
+						<td colspan="4">{input 0-0-RL}</td>
+					  </tr>
+					  <tr>
+						<td>{label 0-0-POZNAMKA /}</td>
+						<td colspan="4">{input 0-0-POZNAMKA}</td>
+					  </tr>
+					  <td colspan="5" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></td>
+						{foreach $form['0-0-DG']->getContainers() as $key => $dg}
+							{var $link = $key}
+							<tr>
+								<td>{label 0-0-DG-{$key}-DG_NAZEV /}</td>
+								<td colspan="2">{input 0-0-DG-{$key}-DG_NAZEV}</td>
+								<td><label>VILP</label></td>
+								<td>{input 0-0-DG-{$key}-VILP}</td>
+							</tr>
+							<tr>
+								<td>{label 0-0-DG-{$key}-DG_PLATNOST_OD}</td>
+								<td>{input 0-0-DG-{$key}-DG_PLATNOST_OD}</td>
+								<td>{label 0-0-DG-{$key}-DG_PLATNOST_DO}</td>
+								<td>{input 0-0-DG-{$key}-DG_PLATNOST_DO}</td>
+								<td>{input 0-0-DG-{$key}-remove}</td>
+							</tr>
+						{/foreach}
+						{ifset $link}
+						<tr>
+                                <td colspan="5">{input 0-0-DG-add}</td>
+                        </tr>
+						{else}
+						<tr>
+                                <td colspan="5">{input 0-0-DG-add}</td>
+                        </tr>
+						{/ifset}
+						<th colspan="6"></th>
+					</table>
+					{foreach $organizace as $org}
+						<div id="{$org}">
+							<table id="all" class="pojistovny poj">
+							  <tr>
+								<th colspan="5">Organizace {$org} (pro vybrané pojišťovny)</th>
+							  </tr>
+							  <tr>
+								<td>{label {$org}-0-STAV /}</td>
+								<td colspan="4">{input {$org}-0-STAV}</td>
+							  </tr>
+							  <tr id="NASMLOUVANO_DATA{$org}0">
+								<td>{label {$org}-0-NASMLOUVANO_OD /}</td>
+								<td colspan="4">{input {$org}-0-NASMLOUVANO_OD}</td>
+							 </tr>
+							  <tr>
+								<td>{label {$org}-0-POJISTOVNY /}</td>
+								<td colspan="4">{input {$org}-0-POJISTOVNY}</td>
+							  </tr>
+							  <tr>
+								<td><label>Revizák</label></td>
+								<td colspan="4">{input {$org}-0-Revizak}</td>
+							  </tr>
+							  <tr id="revizak{$org}0">
+								<td>{label {$org}-0-RL /}</td>
+								<td colspan="4">{input {$org}-0-RL}</td>
+							  </tr>
+							  <tr>
+								<td>{label {$org}-0-POZNAMKA /}</td>
+								<td colspan="4">{input {$org}-0-POZNAMKA}</td>
+							  </tr>
+							<td colspan="5" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></td>
+							{foreach $form["{$org}-0-DG"]->getContainers() as $key => $dg}
+								{var $links[$org] = $key}
+								<tr>
+									<td>{label {$org}-0-DG-{$key}-DG_NAZEV /}</td>
+									<td colspan="2">{input {$org}-0-DG-{$key}-DG_NAZEV}</td>
+									<td><label>VILP</label></td>
+									<td>{input {$org}-0-DG-{$key}-VILP}</td>
+								</tr>
+								<tr>
+									<td>{label {$org}-0-DG-{$key}-DG_PLATNOST_OD}</td>
+									<td>{input {$org}-0-DG-{$key}-DG_PLATNOST_OD}</td>
+									<td>{label {$org}-0-DG-{$key}-DG_PLATNOST_DO}</td>
+									<td>{input {$org}-0-DG-{$key}-DG_PLATNOST_DO}</td>
+									<td>{input {$org}-0-DG-{$key}-remove}</td>
+								</tr>
+							{/foreach}
+							{ifset $links[$org]}
+							<tr>
+									<td colspan="5">{input {$org}-0-DG-add}</td>
+							</tr>
+							{else}
+							<tr>
+									<td colspan="5">{input {$org}-0-DG-add}</td>
+							</tr>
+							{/ifset}
+							<th colspan="5"></th>
+						</table>
+						{foreach $pojistovny as $poj}
+							<table id="p{$poj}_pojistovna" class="pojistovny poj">
+							  <tr>
+								<th colspan="5">Organizace: {$org} zdravotní pojištovna {$poj}</th>
+							  </tr>
+							  <tr>
+								<td>{label {$org}-{$poj}-STAV /}</td>
+								<td colspan="4">{input {$org}-{$poj}-STAV}</td>
+							  </tr>
+							  <tr id="NASMLOUVANO_DATA{$org}{$poj}">
+								<td>{label {$org}-{$poj}-NASMLOUVANO_OD /}</td>
+								<td colspan="4">{input {$org}-{$poj}-NASMLOUVANO_OD}</td>
+							 </tr>
+							  <tr>
+								<td><label>Revizák</label></td>
+								<td colspan="4">{input {$org}-{$poj}-Revizak}</td>
+							  </tr>
+							  <tr id="revizak{$org}{$poj}">
+								<td>{label {$org}-{$poj}-RL /}</td>
+								<td colspan="4">{input {$org}-{$poj}-RL}</td>
+							  </tr>
+							  <tr>
+								<td>{label {$org}-{$poj}-POZNAMKA /}</td>
+								<td colspan="4">{input {$org}-{$poj}-POZNAMKA}</td>
+							  </tr>
+							  <tr>
+									<td colspan="5" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></b></td>
+							  </tr>
+							{foreach $form["{$org}-{$poj}-DG"]->getContainers() as $key => $dg}
+								{var $linksz[$org][$poj] = $key}
+								<tr>
+									<td>{label {$org}-{$poj}-DG-{$key}-DG_NAZEV /}</td>
+									<td colspan="2">{input {$org}-{$poj}-DG-{$key}-DG_NAZEV}</td>
+									<td><label>VILP</label></td>
+									<td>{input {$org}-{$poj}-DG-{$key}-VILP}</td>
+								</tr>
+								<tr>
+									<td>{label {$org}-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td>
+									<td>{input {$org}-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td>
+									<td>{label {$org}-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td>
+									<td>{input {$org}-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td>
+									<td>{input {$org}-{$poj}-DG-{$key}-remove}</td>
+								</tr>
+								<tr>
+									<td colspan="5"><hr></td>
+								</tr>
+							{/foreach}
+							{ifset $linksz[$org][$poj]}
+							<tr>
+									<td colspan="5">{input {$org}-{$poj}-DG-add}</td>
+							</tr>
+							{else}
+							<tr>
+									<td colspan="5">{input {$org}-{$poj}-DG-add}</td>
+							</tr>
+							{/ifset}
+							<th colspan="5"></th>
+							</table>
+						{/foreach}
+						</div>
+					{/foreach}
+					<table class="lekovnice" style="position: sticky; bottom: 0; left: 0; width: 100%; background: #225e9d;">
+						<td style="width: 50%;"><a n:href="Leky:default" class="btn btn-danger btn-block">Zpět</a></td> 
+						<td>{input send}</td>
+					</table>
+                </article>
+        </fieldset>
+        {/form}
+      {else}
+         <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}    
+    </div>
+{/block}
+{block scripts}
+{include #parent}
+<script type="text/javascript">
+	$('#lekyForm-ID_LEKY').on('itemAdded', function(event){
+		ajax_multivalue();
+	});
+	$('#lekyForm-ID_LEKY').tagsinput({
+		maxChars: 7
+	});
+
+	$(".bootstrap-tagsinput :text").autocomplete({
+        source: function( request, response ) {
+        $.nette.ajax({
+				url: {link Idlek!},
+				data: {	typedText: request.term	},
+				success: function( data ) {
+					response( $.map( data, function(item, label) {
+							return { label: label, value: item }
+					}));
+				}
+			});
+		},
+		minLength: 4
+    });
+
+
+	$($("[data-autocomplete-dg]")).autocomplete({
+		source: {link Dgskup!}, 
+		minLength: 1
+	});
+
+	var json = '[{"nazev":"NAZ"},{"dop":"DOP"},{"sila":"SILA"},{"baleni":"BALENI"},{"ATC":"ATC"},{"ATC3":"ATC3"},{"ucinnalatka":"UCINNA_LATKA"},{"BIOSIMOLAR":"BIOSIMOLAR"}]';
+    var arr = JSON.parse(json);
+   
+   	var json_fin = '[{"uhr1":"UHR1"},{"uhr2":"UHR2"},{"uhr3":"UHR3"},{"MAX":"CENA_MAX"},{"VYROBCE":"CENA_VYROBCE"},{"NAKUPNI":"CENA_NAKUPNI"}]';
+    var arr_fin = JSON.parse(json_fin);
+   
+	function ajax_multivalue(){
+		alert("Hodnoty se načítají");
+		$.nette.ajax({
+			type: 'GET',
+			url: {link Multiajax!},
+			data: {'values': $("#lekyForm-ID_LEKY").val()},
+			success: function(payload){
+				arr.forEach(function(o) {
+					document.getElementById("lekyForm-"+Object.values(o)[0]).value = Object.values(payload[Object.keys(o)[0]]);
+				});
+				{if $modul_fin == 1}
+				arr_fin.forEach(function(o) {
+					document.getElementById("lekyForm-"+Object.values(o)[0]).value = Object.values(payload[Object.keys(o)[0]]);
+				});
+				{/if}
+				 
+			},
+			error: function (xhr) {
+				console.log(xhr);
+			}
+		})
+	}
+	
+</script>
+<script type="text/javascript" n:syntax='off'>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{/block}
+
+
+{block head}
+<style>
+	{if $modul_poj == 0}
+	.poj{
+		display: none !important;
+	}
+	{/if}
+	{if $modul_fin == 0}
+	.fin{
+		display: none !important;
+	}
+	{/if}	
+</style>
+{/block}

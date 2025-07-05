@@ -1,0 +1,35 @@
+﻿{* Latte template *}
+{layout '../@layout.latte'}
+
+{block content}
+    <div id="content">
+     {if $prava == '9'}  
+		 {form symbolOrdForm}
+        <fieldset>
+            <a n:href=":default"><big>Zpět</big></a>
+                <article>
+                    <table class="lekovnice">
+                      <tr>
+                        <th colspan="2">Symbol ordinace</th>
+                      </tr>
+                      <tr>
+                        <td>{label SYMBOL /}</td>
+                        <td>{input SYMBOL}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label VYZNAM /}</td>
+                        <td>{input VYZNAM}</td>
+                      </tr>                      
+                      <tr>
+                          <td colspan="2">{input send}</td>
+                      </tr>
+                    </table>
+                </article>
+        </fieldset>
+      {/form}
+      {else}
+        <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}  
+    </div>
+{/block}
+

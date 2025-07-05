@@ -1,0 +1,49 @@
+{* Latte template *}
+
+{block content}
+<div id="content">
+<br>
+{if $prava=="9"}
+<h1>Log odeslaných zpráv</h1>
+</div>
+
+{include date_filter_div}
+
+{control logSendingsGrid}
+
+{/if}
+{/block}
+
+{block scripts}
+{include parent}
+
+{include date_filter_script}
+
+{/block}
+
+{block head}
+<style>
+    #logSendingsGrid td {
+        word-wrap: break-word;
+        max-width: 1px;
+    }
+    .grid-header-time {
+        width: 10% !important;
+    }
+    .grid-header-type {
+        width: 10% !important;
+    }
+    .grid-header-recipient {
+        width: 20% !important;
+    }
+    .grid-header-subject {
+        width: 20% !important;
+    }
+    .grid-header-content {
+        width: 30% !important;
+    }
+    .grido th.actions {
+        width: 10% !important;
+    }
+</style>
+{/block}

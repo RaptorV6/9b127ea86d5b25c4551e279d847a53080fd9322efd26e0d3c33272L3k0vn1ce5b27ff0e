@@ -1,0 +1,59 @@
+﻿{* Latte template *}
+{layout '../@layout.latte'}
+
+{block content}
+    <div id="content">
+     {if $prava == '9'}  
+		 {form ciselnikyForm}
+        <fieldset>
+            <a n:href=":default"><big>Zpět</big></a>
+                <article>
+                    <table class="lekovnice">
+                      <tr>
+                        <th colspan="2">Detind</th>
+                      </tr>
+                      <tr>
+                        <td>{label KOD /}</td>
+                        <td>{input KOD}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label NAZ /}</td>
+                        <td>{input NAZ}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label SILA /}</td>
+                        <td>{input SILA}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label FORMA /}</td>
+                        <td>{input FORMA}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label BALENI /}</td>
+                        <td>{input BALENI}</td>
+                      </tr>
+					  <tr>
+                        <td>{label CESTA /}</td>
+                        <td>{input CESTA}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label ATC /}</td>
+                        <td>{input ATC}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label INDIKACNI_OMEZENI /}</td>
+                        <td>{input INDIKACNI_OMEZENI}</td>
+                      </tr>
+                      <tr>
+                          <td colspan="2">{input send}</td>
+                      </tr>
+                    </table>
+                </article>
+        </fieldset>
+      {/form}
+      {else}
+        <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}  
+    </div>
+{/block}
+

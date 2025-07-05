@@ -1,0 +1,39 @@
+{* Latte template *}
+{import $originalTemplate} {*zprovozní snippety*}
+
+{snippetArea templateWrapper}
+	{embed $originalTemplate} 
+		{import  $originalTemplate } {*načte proměnné($control) a pod...*}
+		{block settings}
+			{if $inlineAdd}
+				{$inlineAdd->renderButtonAdd()}
+			{/if}
+			
+			<span n:snippet="filterResetBtn" class="datagrid-exports">
+				<a n:href="resetFilter!" n:if="$filter_active" class="ajax btn btn-xs btn-danger">Resetovat filter</a>
+			</span>
+
+			<a id="saveSettingsLink" n:href="saveDbSettings!" n:if="$renderSaveSettBtn" class="ajax btn btn-xs btn-success" title="Uložit nastavení gridu."><span class="fa fa-save"></span></a>
+
+			<div class="btn-group">
+				<button type="button" class="btn btn-xs btn-default btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
+					<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
+				</button>
+				
+				<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid" style="transform: none !important;">
+					<li n:foreach="$columnsVisibility as $v_key => $visibility">
+						{input visibility-columns-{$v_key} }
+					</li>
+					<li>{input visibility-submit}</li>
+					<li role="separator" class="divider dropdown-divider "></li>
+					<li>
+						<a n:href="showAllColumns!" class="ajax dropdown-item"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
+					</li>
+					<li n:if="$control->hasSomeColumnDefaultHide()">
+						<a n:href="showDefaultColumns!" class="ajax dropdown-item"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
+					</li>
+				</ul>
+			</div>
+		{/block}
+	{/embed}
+{/snippetArea}

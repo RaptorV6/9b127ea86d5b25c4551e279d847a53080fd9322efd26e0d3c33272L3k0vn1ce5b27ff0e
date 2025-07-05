@@ -1,0 +1,53 @@
+{* Latte template *}
+{define footer}
+        <div class="footer">
+            <div class="logos-container">
+                <img src="{$basePath}/img/homepage-logos__rnb.png">
+                &nbsp &nbsp &nbsp
+                <small></a><p class="it-info">IT - oddělení vývoje <br>+420 311 745 906</p></small> 
+            </div>
+        </div>
+{/define}
+
+{define menu}
+ <div class="alert menu">
+        <h1>{$title}{$nadpis}<img id="logo" src="{$basePath}/img/AKESO_horizontalni_RGB.svg"></h1>
+        {if $logged}
+            <div class="alert alert-info menu" style="width: 100%;">
+                <div class="dropdown col-11">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{$user}</button>
+                    <ul class="dropdown-menu">
+                    {* V blocks.latte - uprav menu *}
+<li class="mezera"><a n:href=":Leky:Leky:default"><i class="fa fa-windows"></i> Domů</a></li>
+<li class="mezera"><a n:href=":Leky:Zjednodusene:default"><i class="fa fa-list"></i> Zjednodušený přehled</a></li>
+                        <li class="mezera"><a n:href=":Leky:Atc:default"><i class="fa fa-folder"></i> ATC skupina</a></li>
+						<li class="mezera"><a n:href=":Ciselniky:Ciselniky:default"><i class="fa fa-folder"></i> Číselníky</a></li>
+						<li class="mezera"><a n:href=":Ciselniky:Atcs:default"><i class="fa fa-folder"></i> ATC číselník</a></li>
+						<li class="mezera"><a n:href=":Ciselniky:Dg:default"><i class="fa fa-folder"></i>Dg číselník</a></li>
+						<li class="mezera"><a n:href=":Ciselniky:Symbol:default"><i class="fa fa-folder"></i> Symbol číselník</a></li>
+						<li class="mezera"><a n:href=":Ciselniky:SymbolOrd:default"><i class="fa fa-folder"></i> Symbol ordinace číselník</a></li>
+                      {if $prava == '9' || $prava == '2'}
+                        <li><hr></li>
+                        <li class="mezera"><a n:href=":Leky:Leky:new"><i class="fa fa-plus"></i> Nový lék</a></li>
+                        <li class="mezera"><a n:href=":Leky:Atc:new"><i class="fa fa-folder-open"></i> Nová ATC skupina</a></li>
+                      {/if}
+                      {if $prava == '9'}
+                        <li><hr></li>
+                        <li class="mezera"><a n:href=":User:User:default"><i class="fa fa-user"></i> Uživatelé</a></li>
+                        <li class="mezera"><a n:href=":User:User:new"><i class="fa fa-user-plus"></i> Nový uživatel</a></li>
+						<li class="mezera"><a n:href=":Logy:LogAccess:default"><i class="fa fa-list"></i> Log pohybu po aplikaci</a></li>
+						<li class="mezera"><a n:href=":Logy:LogDB:default"><i class="fa fa-list"></i> Log změn v databázi</a></li>
+						<li class="mezera"><a n:href=":Logy:LogExceptions:default"><i class="fa fa-list"></i> Log výjimek</a></li>
+						<li class="mezera"><a n:href=":Logy:LogSendings:default"><i class="fa fa-list"></i> Log odeslaných zpráv</a></li>
+                      {/if}
+                      <li><hr></li>
+                      <li class="mezera"><a n:href=":User:User:change"><i class="fa fa-lock"></i> Změna hesla</a></li>
+                      <li class="mezera"><a n:href=":Homepage:logOut"><i class="fa fa-close"></i> Odhlášení</a></li>
+                    </ul>
+                </div>
+				<a n:href=":Leky:Leky:default" style="float: right; margin-top: -35px;"><i class="fa fa-windows"></i><big> Domů</big></a>
+            </div>
+			
+        {/if}
+ </div>   
+{/define}

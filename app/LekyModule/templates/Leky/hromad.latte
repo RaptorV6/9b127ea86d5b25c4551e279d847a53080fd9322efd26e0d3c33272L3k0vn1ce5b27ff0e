@@ -1,0 +1,226 @@
+{* Latte template *}
+
+{block content}
+    <div id="content">
+      {if $prava == '9' || $prava == '2'}  
+        {form hromadForm}
+        <div n:if="$form->hasErrors()" n:foreach="$form->errors as $error" n:class="alert, 'alert-danger'"><span>{$error}</span></div>   
+        <fieldset>
+            <a n:href="Leky:default"><big>Zpět</big></a>
+                <article>
+				<table class="lekovnice">
+                  <tr>
+                        <th colspan="2">Identifikátory léku ({$id})</th>
+                      </tr>
+				  <tr>
+					  <td>{label ORGANIZACE /}</td>
+					  <td>{input ORGANIZACE}</td>
+				  </tr>
+				  <tr>
+					<td>{label POJ /}</td>
+					<td>{input POJ}</td>
+				  </tr>
+				</table>
+					<table id="vse" class="pojistovny poj">
+					  <tr>
+						<th colspan="6">(Pro vybrané organizace)(pro vybrané pojišťovny)</th>
+					  </tr>
+					  <tr>
+						<td colspan="3">{label 0-0-STAV /}</td>
+						<td colspan="3">{input 0-0-STAV}</td>
+					  </tr>
+					  <tr id="NASMLOUVANO_DATA00">
+						<td colspan="3">{label 0-0-NASMLOUVANO_OD /}</td>
+						<td colspan="3">{input 0-0-NASMLOUVANO_OD}</td>
+					  </tr>
+					  <tr>
+						<td colspan="3">{label 0-0-ORG /}</td>
+						<td colspan="3">{input 0-0-ORG}</td>
+					  </tr>
+					  <tr>
+						<td colspan="3">{label 0-0-POJISTOVNY /}</td>
+						<td colspan="3">{input 0-0-POJISTOVNY}</td>
+					  </tr>
+					  <tr>
+						  <td colspan="3"><label>Revizák</label></td>
+						  <td colspan="3">{input 0-0-Revizak}</td>
+					  </tr>
+					  <tr id="revizak00">
+						<td colspan="3">{label 0-0-RL /}</td>
+						<td colspan="3">{input 0-0-RL}</td>
+					  </tr>
+					  <tr>
+						<td colspan="3">{label 0-0-POZNAMKA /}</td>
+						<td colspan="3">{input 0-0-POZNAMKA}</td>
+					  </tr>
+					  <td colspan="6" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></td>
+					  <tfoot class="okno">
+						{foreach $form['0-0-DG']->getContainers() as $key => $dg}
+							{var $link = $key}
+							<tr>
+								<td style="width: 100%;">{label 0-0-DG-{$key}-DG_NAZEV /}</td>
+								<td colspan="2">{input 0-0-DG-{$key}-DG_NAZEV}</td>
+								<td><label>VILP</label></td>
+								<td>{input 0-0-DG-{$key}-VILP}</td>
+							</tr>
+							<tr>
+								<td>{label 0-0-DG-{$key}-DG_PLATNOST_OD}</td>
+								<td>{input 0-0-DG-{$key}-DG_PLATNOST_OD}</td>
+								<td>{label 0-0-DG-{$key}-DG_PLATNOST_DO}</td>
+								<td>{input 0-0-DG-{$key}-DG_PLATNOST_DO}</td>
+								<td>{input 0-0-DG-{$key}-remove}</td>
+							</tr>
+						{/foreach}
+						{ifset $link}
+						<tr>
+                                <td>{input 0-0-DG-add}</td>
+                        </tr>
+						{else}
+						<tr>
+                                <td style="padding-right: 650px;">{input 0-0-DG-add}</td>
+                        </tr>
+						{/ifset}
+						</tfoot>
+					</table>
+					{foreach $organizace as $org}
+						<div id="{$org}">
+							<table id="all" class="pojistovny poj">
+							  <tr>
+								<th colspan="6">Organizace {$org} (pro vybrané pojišťovny)</th>
+							  </tr>
+							  <tr>
+								<td colspan="3">{label {$org}-0-STAV /}</td>
+								<td colspan="3">{input {$org}-0-STAV}</td>
+							  </tr>
+							  <tr id="NASMLOUVANO_DATA{$org}0">
+								<td colspan="3">{label {$org}-0-NASMLOUVANO_OD /}</td>
+								<td colspan="3">{input {$org}-0-NASMLOUVANO_OD}</td>
+							 </tr>
+							  <tr>
+								<td colspan="3">{label {$org}-0-POJISTOVNY /}</td>
+								<td colspan="3">{input {$org}-0-POJISTOVNY}</td>
+							  </tr>
+							  <tr>
+								 <td colspan="3"><label>Revizák</label></td>
+								<td colspan="3">{input {$org}-0-Revizak}</td>
+							  </tr>
+							  <tr id="revizak{$org}0">
+								<td colspan="3">{label {$org}-0-RL /}</td>
+								<td colspan="3">{input {$org}-0-RL}</td>
+							  </tr>
+							  <tr>
+								<td colspan="3">{label {$org}-0-POZNAMKA /}</td>
+								<td colspan="3">{input {$org}-0-POZNAMKA}</td>
+							  </tr>
+							<td colspan="6" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></td>
+							<tfoot class="okno">
+							{foreach $form["{$org}-0-DG"]->getContainers() as $key => $dg}
+								{var $links[$org] = $key}
+								<tr>
+									<td style="width: 100%;"{label {$org}-0-DG-{$key}-DG_NAZEV /}</td>
+									<td colspan="2">{input {$org}-0-DG-{$key}-DG_NAZEV}</td>
+									<td><label>VILP</label></td>
+									<td>{input {$org}-0-DG-{$key}-VILP}</td>
+								</tr>
+								<tr>
+									<td>{label {$org}-0-DG-{$key}-DG_PLATNOST_OD}</td>
+									<td>{input {$org}-0-DG-{$key}-DG_PLATNOST_OD}</td>
+									<td>{label {$org}-0-DG-{$key}-DG_PLATNOST_DO}</td>
+									<td>{input {$org}-0-DG-{$key}-DG_PLATNOST_DO}</td>
+									<td>{input {$org}-0-DG-{$key}-remove}</td>
+								</tr>
+							{/foreach}
+							{ifset $links[$org]}
+							<tr>
+									<td>{input {$org}-0-DG-add}</td>
+							</tr>
+							{else}
+							<tr>
+									<td style="padding-right: 650px;">{input {$org}-0-DG-add}</td>
+							</tr>
+							{/ifset}
+
+							</tfoot>
+						</table>
+						{foreach $pojistovny as $poj}
+							<table id="p{$poj}_pojistovna" class="pojistovny poj">
+							  <tr>
+								<th colspan="6">Organizace: {$org} zdravotní pojištovna {$poj}</th>
+							  </tr>
+							  <tr>
+								<td colspan="3">{label {$org}-{$poj}-STAV /}</td>
+								<td colspan="3">{input {$org}-{$poj}-STAV}</td>
+							  </tr>
+							  <tr id="NASMLOUVANO_DATA{$org}{$poj}">
+								<td colspan="3">{label {$org}-{$poj}-NASMLOUVANO_OD /}</td>
+								<td colspan="3">{input {$org}-{$poj}-NASMLOUVANO_OD}</td>
+							 </tr>
+							  <tr>
+								 <td colspan="3"><label>Revizák</label></td>
+								<td colspan="3">{input {$org}-{$poj}-Revizak}</td>
+							  </tr>
+							  <tr id="revizak{$org}{$poj}">
+								<td colspan="3">{label {$org}-{$poj}-RL /}</td>
+								<td colspan="3">{input {$org}-{$poj}-RL}</td>
+							  </tr>
+							  <tr>
+								<td colspan="3">{label {$org}-{$poj}-POZNAMKA /}</td>
+								<td colspan="3">{input {$org}-{$poj}-POZNAMKA}</td>
+							  </tr>
+							  <tr>
+									<td colspan="6" style="background-color: #6BB6FB;"><b><u><big>Diagnostická skupina</big></u></b></td>
+							  </tr>
+							<tfoot class="okno">
+							{foreach $form["{$org}-{$poj}-DG"]->getContainers() as $key => $dg}
+								{var $linksz[$org][$poj] = $key}
+								<tr>
+									<td style="width: 100%;">{label {$org}-{$poj}-DG-{$key}-DG_NAZEV /}</td>
+									<td colspan="2">{input {$org}-{$poj}-DG-{$key}-DG_NAZEV}</td>
+									<td><label>VILP</label></td>
+									<td>{input {$org}-{$poj}-DG-{$key}-VILP}</td>
+								</tr>
+								<tr>
+									<td>{label {$org}-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td>
+									<td>{input {$org}-{$poj}-DG-{$key}-DG_PLATNOST_OD}</td>
+									<td>{label {$org}-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td>
+									<td>{input {$org}-{$poj}-DG-{$key}-DG_PLATNOST_DO}</td>
+									<td>{input {$org}-{$poj}-DG-{$key}-remove}</td>
+								</tr>
+								<tr>
+									<td colspan="6"><hr></td>
+								</tr>
+							{/foreach}
+							{ifset $linksz[$org][$poj]}
+							<tr>
+									<td>{input {$org}-{$poj}-DG-add}</td>
+							</tr>
+							{else}
+							<tr>
+									<td style="padding-right: 650px;">{input {$org}-{$poj}-DG-add}</td>
+							</tr>
+							{/ifset}
+
+							</tfoot>
+							</table>
+						{/foreach}
+						</div>
+					{/foreach}
+			{input send}
+			</article>
+        </fieldset>
+        {/form}
+      {else}
+         <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}    
+    </div>
+{/block}
+{block scripts}
+{include #parent}
+<script type="text/javascript">
+	$($("[data-autocomplete-dg]")).autocomplete({
+		source: {link Dgskup!}, 
+		minLength: 1
+	});
+</script>
+
+{/block}

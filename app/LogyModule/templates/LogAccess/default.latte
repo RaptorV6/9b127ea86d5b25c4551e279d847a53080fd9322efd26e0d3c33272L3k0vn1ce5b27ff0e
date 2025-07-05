@@ -1,0 +1,49 @@
+{* Latte template *}
+
+{block content}
+{if $prava=="9"}
+<div id="content">
+<br>
+<h1>Log pohybu po aplikaci</h1>
+
+{include date_filter_div}
+
+{control logAccessGrid}
+
+</div>
+{/if}
+{/block}
+
+{block scripts}
+{include parent}
+
+{include date_filter_script}
+
+{/block}
+
+{block head}
+<style>
+    #logAccessGrid td:nth-child(2) {
+        word-break: break-all;
+    }
+    .grid-header-time {
+        width: 10% !important;
+        min-width: 160px;
+    }
+    .grid-header-uri {
+        width: 58% !important;
+        min-width: 120px;
+    }
+    .grid-header-username {
+        width: 12% !important;
+        min-width: 120px;
+    }
+    .grid-header-ip {
+        width: 10% !important;
+        min-width: 120px;
+    }
+    .grido th.actions {
+        width: 10% !important;
+    }
+</style>
+{/block}

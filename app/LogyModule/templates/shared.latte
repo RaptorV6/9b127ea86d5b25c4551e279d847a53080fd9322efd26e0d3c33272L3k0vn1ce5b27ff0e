@@ -1,0 +1,20 @@
+{* Latte template *}
+
+{define date_filter_div}
+<div style="margin: 5px; margin-bottom: 10px">Čas lze filtrovat pomocí intervalu ve formátu 'DD.MM.RRRR-DD.MM.RRRR'. Vyplň filtr: <a href="#" id="today">dnes</a>, <a href="#" id="yesterday">včera</a></div>
+{/define}
+
+{define date_filter_script}
+<script type="text/javascript">
+    $(document).ready(function() {
+       $('#today').click(function() {
+           $('input[name="filters[time]"]').val('{php echo (new \DateTime())->format('d.m.Y').'-'.(new \DateTime())->format('d.m.Y')}');
+           $('.search').click();
+        });
+       $('#yesterday').click(function() {
+           $('input[name="filters[time]"]').val('{php echo (new \DateTime())->modify('-1 day')->format('d.m.Y').'-'.(new \DateTime())->modify('-1 day')->format('d.m.Y')}');
+           $('.search').click();
+        });
+    });
+</script>
+{/define}

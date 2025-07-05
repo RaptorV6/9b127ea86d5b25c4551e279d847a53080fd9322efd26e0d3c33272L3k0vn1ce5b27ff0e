@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{import "blocks.latte"}
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{$title}{$nadpis}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">				
+        <link rel="stylesheet" href="{$basePath}/css/bootstrap-reboot.min.css">
+        <link rel="stylesheet" href="{$basePath}/css/bootstrap-4.1.3.min.css">
+        <link rel="stylesheet" href="{$basePath}/css/jquery-ui-1.12.1.min.css">
+        <link rel="stylesheet" href="{$basePath}/css/bootstrap-datepicker.css">
+        <link rel="stylesheet" href="{$basePath}/css/bootstrap-datepicker.min.css">
+        <link rel="stylesheet" href="{$basePath}/css/grid/datagrid-spinners.css">
+        <link rel="stylesheet" href="{$basePath}/css/grid/datagrid.css">
+        <link rel="stylesheet" href="{$basePath}/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{$basePath}/css/awesomecomplete.css">
+        <link rel="stylesheet" href="{$basePath}/css/main.css">
+        <link rel="stylesheet" href="{$basePath}/css/bootstrap-toggle.css">
+		<link rel="stylesheet" href="{$basePath}/css/jquery.multiselect.css">
+		<link rel="stylesheet" href="{$basePath}/css/bootstrap-tagsinput.css">
+		<link rel="stylesheet" href="{$basePath}/css/bootstrap.min.css">
+		
+        <script src="{$basePath}/js/jquery-3.3.1.min.js"></script>
+        <script src="{$basePath}/js/jquery-ui-1.12.1.min.js"></script>
+        <script src="{$basePath}/js/bootstrap.bundle.min.js"></script>
+        <script src="{$basePath}/js/bootstrap-datepicker.min.js"></script>
+        <script src="{$basePath}/js/bootstrap-datepicker.cs.min.js"></script>
+        <script src="{$basePath}/js/nette.ajax.js"></script>
+        <script src="{$basePath}/js/bootstrap-toggle.js"></script>
+        <script src="{$basePath}/js/netteForms.js"></script>
+        <script src="{$basePath}/js/grid/datagrid.js"></script>
+        <script src="{$basePath}/js/grid/datagrid-spinners.js"></script>
+        <script src="{$basePath}/js/jquery.awesomecomplete.js"></script>
+		<script src="{$basePath}/js/jquery.multiselect.min.js"></script>
+		
+		<script src="{$basePath}/js/typeahead.bundle.js"></script>
+		<script src="{$basePath}/js/bootstrap-tagsinput.min.js"></script>
+        
+		<script>
+			$.nette.ext('multiselect', {
+				complete: function () {
+					registrujMultiselect();
+				}
+			});
+		</script>
+
+	{block head}{/block}
+</head>
+
+<body>
+
+        {include menu}
+        {snippet flashes}
+             <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type">{$flash->message}</div>
+        {/snippet }
+        
+        <div id="content" class="page" >
+            {include content}
+        </div>
+
+        {include footer}  
+        
+	{block scripts}
+            <script>
+                $.nette.init();
+            </script>
+            <script type="text/javascript">
+                function registrujMultiselect() {
+                    $(".multiselect").multiselect({
+                        selectedText: "#/#",
+                        checkAllText: "Vybrat všechny",
+                        uncheckAllText: "Odebrat všechny",
+                        noneSelectedText: "-"
+                    });
+                }
+                $(document).ready(function() {
+                    $('#content').show();
+					$('select.multiselect').change(function() { Nette.toggleForm(this.form, this); });
+                    registrujMultiselect();
+					$('.tgl-btn').change(function() { Nette.toggleForm(this.form, this); });
+					$('.tgl-btn').bootstrapToggle({
+						on: 'Ano',
+						off: 'Ne',
+						onstyle: 'success',
+						offstyle:'danger'
+					});
+											
+                });
+				function enabledisablevilp(ele)
+				{
+					var id = ele.id;
+					const idsplit = id.split("-");
+					if(document.getElementById('lekyForm-' + idsplit[1] + '-' + idsplit[2] + '-VILP').checked == true) {
+						document.getElementById("lekyForm-" + idsplit[1] + "-" + idsplit[2] + "-VILP_PLATNOST_OD").disabled = false;
+						document.getElementById("lekyForm-" + idsplit[1] + "-" + idsplit[2] + "-VILP_PLATNOST_DO").disabled = false;
+					}
+					else{
+						document.getElementById("lekyForm-" + idsplit[1] + "-" + idsplit[2] + "-VILP_PLATNOST_OD").disabled = true;
+						document.getElementById("lekyForm-" + idsplit[1] + "-" + idsplit[2] + "-VILP_PLATNOST_DO").disabled = true; 
+					}		
+				}			
+
+
+            </script>
+	{/block}
+</body>
+</html>

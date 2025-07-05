@@ -1,0 +1,35 @@
+﻿{* Latte template *}
+{layout '../@layout.latte'}
+
+{block content}
+    <div id="content">
+     {if $prava == '9'}  
+		 {form dgForm}
+        <fieldset>
+            <a n:href=":default"><big>Zpět</big></a>
+                <article>
+                    <table class="lekovnice">
+                      <tr>
+                        <th colspan="2">DG skupina</th>
+                      </tr>                    
+                      <tr>
+                        <td>{label KOD_SKUP /}</td>
+                        <td>{input KOD_SKUP}</td>
+                      </tr>                      
+                      <tr>
+                        <td>{label NAZEV_SKUP /}</td>
+                        <td>{input NAZEV_SKUP}</td>
+                      </tr>
+                      <tr>
+                          <td colspan="2">{input send}</td>
+                      </tr>
+                    </table>
+                </article>
+        </fieldset>
+      {/form}
+      {else}
+        <p n:class="alert, 'alert-danger'">Nemáte dostatečná práva!!</p>
+      {/if}  
+    </div>
+{/block}
+
