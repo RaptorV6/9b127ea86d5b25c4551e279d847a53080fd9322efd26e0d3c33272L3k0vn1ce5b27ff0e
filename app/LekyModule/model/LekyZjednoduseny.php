@@ -105,6 +105,91 @@ MAX(poj213_BARVA) as poj213_BARVA
     return $select->fetchAll();
 }
 
+public function getDataSourceWithFulltextSearch($fulltext, $organizace = null, $history = null) {
+    $whereConditions = ['AKORD = 0'];
+    $params = [self::LEKY_VIEW];
+    
+    if ($organizace) {
+        if (is_array($organizace)) {
+            $whereConditions[] = 'ORGANIZACE IN %in';
+            $params[] = $organizace;
+        } else {
+            $whereConditions[] = 'ORGANIZACE = %s';
+            $params[] = $organizace;
+        }
+    }
+    
+    if ($fulltext) {
+       $whereConditions[] = '(NAZ LIKE %~like~ OR UCINNA_LATKA LIKE %~like~ OR BIOSIMOLAR LIKE %~like~ OR POZNAMKA LIKE %~like~ OR ATC LIKE %~like~ OR EXISTS (SELECT 1 FROM AKESO_LEKY_POJISTOVNY_DG dg WHERE dg.ID_LEKY = main.ID_LEKY AND dg.DG_NAZEV LIKE %~like~))';
+        $params[] = $fulltext;
+        $params[] = $fulltext;
+        $params[] = $fulltext;
+        $params[] = $fulltext;
+        $params[] = $fulltext;
+        $params[] = $fulltext;
+    }
+    
+    $whereClause = implode(' AND ', $whereConditions);
+    
+    $select = $this->db->query("
+        SELECT TOP 100 PERCENT
+            CASE
+                WHEN COUNT(*) > 1
+                THEN NAZ + ' (' + CAST(COUNT(*) AS VARCHAR) + 'x)'
+                ELSE NAZ
+            END as NAZ,
+            ORGANIZACE,
+            MAX(POZNAMKA) as POZNAMKA,
+            MAX(UCINNA_LATKA) as UCINNA_LATKA,
+            MAX(BIOSIMOLAR) as BIOSIMOLAR,
+            MAX(ATC) as ATC,
+            COUNT(*) as VARIANT_COUNT,
+            MIN(ID_LEKY) as ID_LEKY,
+            
+            MAX([111_STAV]) as [111_STAV],
+            MAX([111_NASMLOUVANO_OD]) as [111_NASMLOUVANO_OD],
+            MAX([111_POZNAMKA]) as [111_POZNAMKA],
+            MAX(poj111_BARVA) as poj111_BARVA,
+            
+            MAX([201_STAV]) as [201_STAV],
+            MAX([201_NASMLOUVANO_OD]) as [201_NASMLOUVANO_OD],
+            MAX([201_POZNAMKA]) as [201_POZNAMKA],
+            MAX(poj201_BARVA) as poj201_BARVA,
+            
+            MAX([205_STAV]) as [205_STAV],
+            MAX([205_NASMLOUVANO_OD]) as [205_NASMLOUVANO_OD],  
+            MAX([205_POZNAMKA]) as [205_POZNAMKA],              
+            MAX(poj205_BARVA) as poj205_BARVA,
+
+            MAX([207_STAV]) as [207_STAV],
+            MAX([207_NASMLOUVANO_OD]) as [207_NASMLOUVANO_OD],  
+            MAX([207_POZNAMKA]) as [207_POZNAMKA],              
+            MAX(poj207_BARVA) as poj207_BARVA,
+
+            MAX([209_STAV]) as [209_STAV], 
+            MAX([209_NASMLOUVANO_OD]) as [209_NASMLOUVANO_OD],  
+            MAX([209_POZNAMKA]) as [209_POZNAMKA],              
+            MAX(poj209_BARVA) as poj209_BARVA,
+
+            MAX([211_STAV]) as [211_STAV],
+            MAX([211_NASMLOUVANO_OD]) as [211_NASMLOUVANO_OD],  
+            MAX([211_POZNAMKA]) as [211_POZNAMKA],              
+            MAX(poj211_BARVA) as poj211_BARVA,
+
+            MAX([213_STAV]) as [213_STAV],
+            MAX([213_NASMLOUVANO_OD]) as [213_NASMLOUVANO_OD],  
+            MAX([213_POZNAMKA]) as [213_POZNAMKA],              
+            MAX(poj213_BARVA) as poj213_BARVA
+            
+        FROM %n main
+        WHERE $whereClause
+        GROUP BY NAZ, ORGANIZACE
+        ORDER BY MIN(ID_LEKY) COLLATE Czech_CI_AS DESC
+    ", ...$params);
+    
+    return $select->fetchAll();
+}
+
 public function getDataSource_DG($id_leku, $organizace_filter = null) {
     \Tracy\Debugger::barDump($id_leku, 'DEBUG: ID_LEKU');
     \Tracy\Debugger::barDump($organizace_filter, 'DEBUG: Organizace filter');
@@ -201,22 +286,15 @@ public function getPojistovny($id, $org) {
     }
 
 public function set_pojistovny_dg($values){ 
-    //error_log("=== INSERT DG DATA ===");
-    //error_log("INSERT VALUES: " . print_r($values, true));
-    
     return $this->db->insert(self::POJISTOVNY_DG, $values)->execute(); 
 }
     
-// V app/LekyModule/model/LekyZjednoduseny.php - oprav metodu set_pojistovny_dg_edit
 public function set_pojistovny_dg_edit($values){ 
-    //error_log("=== MODEL SET_POJISTOVNY_DG_EDIT ===");
-    //error_log("INPUT VALUES: " . print_r($values, true));
-    
     $originalValues = [
         'ID_LEKY' => $values['ID_LEKY'],
         'ORGANIZACE' => $values['ORGANIZACE'],
         'POJISTOVNA' => $values['POJISTOVNA'],
-        'DG_NAZEV' => $values['ORIGINAL_DG_NAZEV'] ?? $values['DG_NAZEV'] // Použij původní název
+        'DG_NAZEV' => $values['ORIGINAL_DG_NAZEV'] ?? $values['DG_NAZEV']
     ];
     
     $updateDataDG = [
@@ -248,12 +326,9 @@ public function set_pojistovny_dg_edit($values){
                 $values['ORGANIZACE'],
                 $values['POJISTOVNA']
             )->execute();
-            
-        //error_log("POJISTOVNY UPDATE RESULT: " . $resultPoj->getRowCount());
     }
     
-    //error_log("DG UPDATE RESULT: " . $resultDG->getRowCount());
-    return $resultDG->getRowCount() > 0; // Vrať boolean
+    return $resultDG->getRowCount() > 0;
 }
 
     public function unset_pojistovny_dg($values){

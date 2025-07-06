@@ -6,6 +6,32 @@
            <strong>Zjednodušený přehled léků</strong><br>
            Zobrazuje pouze nejdůležitější informace: organizace, název, poznámka, účinná látka, biosimilar, ATC a stavy pojišťoven.
        </div>
+       
+       <div class="row mb-3">
+           <div class="col-md-8">
+               <form method="get" class="form-inline">
+                   <div class="input-group" style="width: 100%;">
+                       <input type="text" 
+                              name="fulltext" 
+                              value="{$presenter->getParameter('fulltext')}" 
+                              class="form-control" 
+                              placeholder="Fulltextové vyhledávání: název, účinná látka, biosimilar, indikace..."
+                              style="min-width: 400px;">
+                       <div class="input-group-append">
+                           <button class="btn btn-primary" type="submit">
+                               <i class="fa fa-search"></i> Hledat
+                           </button>
+                           {if $presenter->getParameter('fulltext')}
+                           <a href="{link this}" class="btn btn-secondary">
+                               <i class="fa fa-times"></i> Zrušit
+                           </a>
+                           {/if}
+                       </div>
+                   </div>
+               </form>
+           </div>
+       </div>
+       
        {control zjednoduseneDataGrid}
    </div>
 {/block}
