@@ -200,6 +200,7 @@ public function getDataSource_DG($id_leku, $organizace_filter = null) {
         ->fetchAll();
     \Tracy\Debugger::barDump($debugDG, 'DEBUG: Všechna DG data pro tento lék');
     
+    // ✅ UPRAVENÝ SQL - načítá RL a POZNAMKA pro všechny pojišťovny
     $query = $this->db->select('
         ROW_NUMBER() OVER (ORDER BY dg.ID_LEKY, dg.POJISTOVNA) AS ID,
         dg.ID_LEKY,
@@ -210,8 +211,8 @@ public function getDataSource_DG($id_leku, $organizace_filter = null) {
         dg.VILP,
         CONVERT(nvarchar(20), dg.DG_PLATNOST_OD, 104) as DG_PLATNOST_OD,
         CONVERT(nvarchar(20), dg.DG_PLATNOST_DO, 104) as DG_PLATNOST_DO,
-        CASE WHEN dg.POJISTOVNA = 111 THEN p.RL ELSE \'\' END as [111_RL],
-        CASE WHEN dg.POJISTOVNA = 111 THEN p.POZNAMKA ELSE \'\' END as [111_POZNAMKA]
+        p.RL,
+        p.POZNAMKA
     ')->from(self::POJISTOVNY_DG, 'dg')
       ->leftJoin(self::LEKY_VIEW, 'lek')->on('dg.ID_LEKY = lek.ID_LEKY AND dg.ORGANIZACE = lek.ORGANIZACE')
       ->leftJoin(self::POJISTOVNY, 'p')->on('dg.ID_LEKY = p.ID_LEKY AND dg.ORGANIZACE = p.ORGANIZACE AND dg.POJISTOVNA = p.POJISTOVNA')
@@ -313,10 +314,11 @@ public function set_pojistovny_dg_edit($values){
             $originalValues['DG_NAZEV']
         )->execute();
     
-    if ($values['POJISTOVNA'] == 111 && (isset($values['111_RL']) || isset($values['111_POZNAMKA']))) {
+    // ✅ PŘEJMENOVANÉ FIELDY (bez 111_)
+    if (isset($values['RL']) || isset($values['POZNAMKA'])) {
         $updateDataPoj = [
-            'RL' => $values['111_RL'] ?? '',
-            'POZNAMKA' => $values['111_POZNAMKA'] ?? ''
+            'RL' => $values['RL'] ?? '',           // ✅ PŘEJMENOVANÉ
+            'POZNAMKA' => $values['POZNAMKA'] ?? ''  // ✅ PŘEJMENOVANÉ
         ];
         
         $resultPoj = $this->db->update(self::POJISTOVNY, $updateDataPoj)

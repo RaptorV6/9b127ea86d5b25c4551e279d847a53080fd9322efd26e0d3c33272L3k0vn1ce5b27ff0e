@@ -143,7 +143,20 @@ public function setDGGrid(\Ublaboo\DataGrid\DataGrid $grid, $ID_LEKY, $presenter
          ->setDefaultHide()
          ->setFilterText();
 
-    $grid->addColumnText('ID_LEKY', 'Kód léku')
+             $grid->addColumnText('POJISTOVNA', 'Pojišťovna')
+         ->setSortable()
+         ->setReplacement([
+             '111' => '111 - VZP',
+             '201' => '201 - VoZP', 
+             '205' => '205 - ČPZP',
+             '207' => '207 - OZP',
+             '209' => '209 - ZPŠ',
+             '211' => '211 - ZPMV',
+             '213' => '213 - RBP'
+         ])
+         ->setFilterText();
+
+    $grid->addColumnText('ID_LEKY', 'ATC')
          ->setSortable()
          ->setDefaultHide()  
          ->setFilterText();
@@ -161,7 +174,8 @@ public function setDGGrid(\Ublaboo\DataGrid\DataGrid $grid, $ID_LEKY, $presenter
          ->setSortable()
          ->setFilterText();
 
-    $grid->addColumnText('111_RL', '111 - Revizní lékař')
+    // ✅ PŘEJMENOVANÉ SLOUPCE (bez 111_)
+    $grid->addColumnText('RL', 'Revizní lékař')
          ->setSortable()
          ->setReplacement([
              '' => 'Ne',
@@ -170,7 +184,7 @@ public function setDGGrid(\Ublaboo\DataGrid\DataGrid $grid, $ID_LEKY, $presenter
          ])
          ->setFilterText();
 
-    $grid->addColumnText('111_POZNAMKA', '111 - Poznámka')
+    $grid->addColumnText('POZNAMKA', 'Poznámka')
          ->setSortable()
          ->setReplacement(["" => "-"])
          ->setFilterText();
@@ -196,16 +210,31 @@ public function setDGGrid(\Ublaboo\DataGrid\DataGrid $grid, $ID_LEKY, $presenter
          ->setFilterDate()
          ->setAttribute("data-date-language", "cs");
 
-    // ✅ INLINE ADD - ale s custom validací
+    // ✅ INLINE ADD s výběrem pojišťovny
     $grid->addInlineAdd()
         ->setPositionTop()
         ->onControlAdd[] = function (Container $container) use($ID_LEKY){
             error_log("=== INLINE ADD CONTROL ADD ===");
             
+            // ✅ SELECT PRO POJIŠŤOVNY
+            $container->addSelect('POJISTOVNA', 'Pojišťovna')
+                      ->setItems([
+                          '111' => '111 - VZP',
+                          '201' => '201 - VoZP', 
+                          '205' => '205 - ČPZP',
+                          '207' => '207 - OZP',
+                          '209' => '209 - ZPŠ',
+                          '211' => '211 - ZPMV',
+                          '213' => '213 - RBP'
+                      ])
+                      ->setDefaultValue('111')
+                      ->setRequired('Vyberte pojišťovnu');
+            
             $container->addText("DG_NAZEV", "Název DG")
                       ->setHtmlAttribute('data-autocomplete-dg');
 
-            $container->addSelect('111_RL', '111 - Revizní lékař')
+            // ✅ PŘEJMENOVANÉ FIELDY (bez 111_)
+            $container->addSelect('RL', 'Revizní lékař')
                       ->setItems([
                           '' => 'Ne',
                           '0' => 'povolení RL- žádanka §16', 
@@ -213,7 +242,7 @@ public function setDGGrid(\Ublaboo\DataGrid\DataGrid $grid, $ID_LEKY, $presenter
                       ])
                       ->setDefaultValue('');
 
-            $container->addText('111_POZNAMKA', '111 - Poznámka');
+            $container->addText('POZNAMKA', 'Poznámka');
 
             $container->addCheckbox('VILP', 'VILP')
                       ->setHtmlAttribute('class', 'checkbox_style')
@@ -230,24 +259,38 @@ public function setDGGrid(\Ublaboo\DataGrid\DataGrid $grid, $ID_LEKY, $presenter
             error_log("=== INLINE ADD CONTROLS CREATED ===");
         };
     
-    // ✅ INLINE EDIT - ale s custom validací
+    // ✅ INLINE EDIT s výběrem pojišťovny
     $grid->addInlineEdit()
         ->onControlAdd[] = function(Container $container): void {
             error_log("=== INLINE EDIT CONTROL ADD ===");
             
             $container->addText("LEK_NAZEV", "Lék")
                       ->setHtmlAttribute('readonly');
+            
+            // ✅ SELECT PRO POJIŠŤOVNY (readonly v edit módu)
+            $container->addSelect('POJISTOVNA', 'Pojišťovna')
+                      ->setItems([
+                          '111' => '111 - VZP',
+                          '201' => '201 - VoZP', 
+                          '205' => '205 - ČPZP',
+                          '207' => '207 - OZP',
+                          '209' => '209 - ZPŠ',
+                          '211' => '211 - ZPMV',
+                          '213' => '213 - RBP'
+                      ])
+                      ->setHtmlAttribute('readonly');
                 
             $container->addText("DG_NAZEV", "DG Název");
 
-            $container->addSelect('111_RL', '111 - Revizní lékař')
+            // ✅ PŘEJMENOVANÉ FIELDY (bez 111_)
+            $container->addSelect('RL', 'Revizní lékař')
                       ->setItems([
                           '' => 'Ne',
                           '0' => 'povolení RL- žádanka §16', 
                           '1' => 'epikríza/info pro RL'
                       ]);
 
-            $container->addText('111_POZNAMKA', '111 - Poznámka');
+            $container->addText('POZNAMKA', 'Poznámka');
 
             $container->addCheckbox('VILP', 'VILP')
                       ->setHtmlAttribute('class', 'checkbox_style');
@@ -260,26 +303,26 @@ public function setDGGrid(\Ublaboo\DataGrid\DataGrid $grid, $ID_LEKY, $presenter
                       
             $container->addHidden('ID_LEKY');
             $container->addHidden('ORGANIZACE');
-            $container->addHidden('POJISTOVNA');
             
             error_log("=== INLINE EDIT CONTROLS CREATED ===");
         };
 
+    // ✅ DEFAULTS PRO EDIT s novými field názvy
     $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, $item): void {
         $PLATNOST_OD = $item['DG_PLATNOST_OD'] !== null ? \DateTime::createFromFormat('d.m.Y', $item['DG_PLATNOST_OD'])->format('Y-m-d') : NULL;
         $PLATNOST_DO = $item['DG_PLATNOST_DO'] !== null ? \DateTime::createFromFormat('d.m.Y', $item['DG_PLATNOST_DO'])->format('Y-m-d') : NULL;
         
         $container->setDefaults([
             'LEK_NAZEV' => $item['LEK_NAZEV'],
+            'POJISTOVNA' => $item['POJISTOVNA'],
             'DG_NAZEV' => $item['DG_NAZEV'],
-            '111_RL' => $item['111_RL'],
-            '111_POZNAMKA' => $item['111_POZNAMKA'],
+            'RL' => $item['RL'],           // ✅ PŘEJMENOVANÉ
+            'POZNAMKA' => $item['POZNAMKA'], // ✅ PŘEJMENOVANÉ
             'VILP' => $item['VILP'],
             'DG_PLATNOST_OD' => $PLATNOST_OD,
             'DG_PLATNOST_DO' => $PLATNOST_DO,
             'ID_LEKY' => $item['ID_LEKY'],
             'ORGANIZACE' => $item['ORGANIZACE'],
-            'POJISTOVNA' => $item['POJISTOVNA'],
         ]);
     };
 

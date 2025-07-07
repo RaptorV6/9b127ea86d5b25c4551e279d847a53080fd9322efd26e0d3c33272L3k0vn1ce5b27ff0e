@@ -112,10 +112,11 @@ if ($signal && is_array($signal) && count($signal) >= 2 &&
     
     if ($ID_LEKY) {
         try {
+            // ✅ POUŽÍVÁ VYBRANOU POJIŠŤOVNU místo fixní 111
             $dgData = (object)[
                 'ID_LEKY' => $ID_LEKY,
                 'ORGANIZACE' => 'MUS',
-                'POJISTOVNA' => 111,
+                'POJISTOVNA' => $inlineData['POJISTOVNA'] ?? 111, // ✅ Z FORMULÁŘE
                 'DG_NAZEV' => $inlineData['DG_NAZEV'],
                 'VILP' => isset($inlineData['VILP']) && $inlineData['VILP'] === 'on' ? 1 : 0,
                 'DG_PLATNOST_OD' => $inlineData['DG_PLATNOST_OD'] ?: null,
@@ -124,13 +125,14 @@ if ($signal && is_array($signal) && count($signal) >= 2 &&
             
             $result = $this->BaseModel->insert_edit_pojistovny_dg($dgData);
             
-            if ($inlineData['111_RL'] || $inlineData['111_POZNAMKA']) {
+            // ✅ PŘEJMENOVANÉ FIELDY (bez 111_)
+            if ($inlineData['RL'] || $inlineData['POZNAMKA']) {
                 $pojData = (object)[
                     'ID_LEKY' => $ID_LEKY,
                     'ORGANIZACE' => 'MUS',
-                    'POJISTOVNA' => 111,
-                    'RL' => $inlineData['111_RL'] ?? '',
-                    'POZNAMKA' => $inlineData['111_POZNAMKA'] ?? '',
+                    'POJISTOVNA' => $inlineData['POJISTOVNA'] ?? 111, // ✅ Z FORMULÁŘE
+                    'RL' => $inlineData['RL'] ?? '',           // ✅ PŘEJMENOVANÉ
+                    'POZNAMKA' => $inlineData['POZNAMKA'] ?? '', // ✅ PŘEJMENOVANÉ
                     'STAV' => 'Nezadáno',
                     'SMLOUVA' => 0,
                     'NASMLOUVANO_OD' => null,
@@ -180,14 +182,15 @@ if ($signal && is_array($signal) && count($signal) >= 2 &&
                 }
                 
                 if ($targetRow) {
+                    // ✅ PŘEJMENOVANÉ FIELDY (bez 111_)
                     $editValues = [
                         'ID_LEKY' => $targetRow->ID_LEKY,
                         'ORGANIZACE' => $targetRow->ORGANIZACE,
                         'POJISTOVNA' => $targetRow->POJISTOVNA,
                         'ORIGINAL_DG_NAZEV' => $targetRow->DG_NAZEV,
                         'DG_NAZEV' => $inlineData['DG_NAZEV'] ?? $targetRow->DG_NAZEV,
-                        '111_RL' => $inlineData['111_RL'] ?? '',
-                        '111_POZNAMKA' => $inlineData['111_POZNAMKA'] ?? '',
+                        'RL' => $inlineData['RL'] ?? '',           // ✅ PŘEJMENOVANÉ
+                        'POZNAMKA' => $inlineData['POZNAMKA'] ?? '', // ✅ PŘEJMENOVANÉ
                         'VILP' => isset($inlineData['VILP']) && $inlineData['VILP'] === 'on' ? 1 : 0,
                         'DG_PLATNOST_OD' => $inlineData['DG_PLATNOST_OD'] ?? null,
                         'DG_PLATNOST_DO' => $inlineData['DG_PLATNOST_DO'] ?? null,
