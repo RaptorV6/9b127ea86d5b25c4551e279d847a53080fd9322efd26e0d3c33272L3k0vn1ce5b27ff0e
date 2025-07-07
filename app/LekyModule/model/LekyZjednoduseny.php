@@ -26,6 +26,34 @@ class LekyZjednoduseny extends \App\Model\AModel {
     return $select;
 }
 
+/**
+ * Načte seznam DG skupin pro daný lék a pojišťovnu
+ * @param string $id_leku
+ * @param string $pojistovna
+ * @return array
+ */
+public function getDgSkupinyProLekAPojistovnu($id_leku, $pojistovna) {
+    if (!$id_leku || !$pojistovna) {
+        return [];
+    }
+    
+    $result = $this->db->select('DG_NAZEV')
+                       ->from(self::POJISTOVNY_DG)
+                       ->where('ID_LEKY = %s', $id_leku)
+                       ->and('POJISTOVNA = %s', $pojistovna)
+                       ->and('(DG_PLATNOST_DO >= getdate() or DG_PLATNOST_DO is null)')
+                       ->and('DG_NAZEV IS NOT NULL')
+                       ->orderBy('DG_NAZEV')
+                       ->fetchAll();
+    
+    $dgSkupiny = [];
+    foreach ($result as $row) {
+        $dgSkupiny[] = $row->DG_NAZEV;
+    }
+    
+    return $dgSkupiny;
+}
+
 public function getDataSourceGrouped($organizace = null, $history = null) {
     
     // ✅ DEBUG
@@ -332,6 +360,10 @@ public function set_pojistovny_dg_edit($values){
     
     return $resultDG->getRowCount() > 0;
 }
+
+
+
+
 
     public function unset_pojistovny_dg($values){
     return $this->db->delete(self::POJISTOVNY_DG)

@@ -40,41 +40,41 @@ class ZjednodusenePresenter extends \App\Presenters\SecurePresenter {
     }
 
     protected function createComponentZjednoduseneDataGrid(string $name) {
-        $grid = new AkesoGrid($this, $name);
-        
-        if ($this->user->getIdentity()->preferovana_organizace !== null && $grid->getSessionData('ORGANIZACE') === null) {
-            $defaultHodnoty = array_intersect(explode(', ', $this->user->getIdentity()->preferovana_organizace), self::ORGANIZACE_VISIBLE);
-        } else {
-            $defaultHodnoty = $grid->getSessionData('ORGANIZACE');
-        }
-
-        $this->GridFactory->setZjednoduseneGrid($grid, $this->user->getIdentity()->prava, $this->user->getIdentity()->modul_poj, $defaultHodnoty);
+    $grid = new AkesoGrid($this, $name);
     
-        $groupByName = $grid->getSessionData('group_by_name') ?? true;
-        $fulltextSearch = $this->getParameter('fulltext');
-        
-        if ($fulltextSearch) {
-            $grid->setDataSource($this->BaseModel->getDataSourceWithFulltextSearch(
-                $fulltextSearch,
+    if ($this->user->getIdentity()->preferovana_organizace !== null && $grid->getSessionData('ORGANIZACE') === null) {
+        $defaultHodnoty = array_intersect(explode(', ', $this->user->getIdentity()->preferovana_organizace), self::ORGANIZACE_VISIBLE);
+    } else {
+        $defaultHodnoty = $grid->getSessionData('ORGANIZACE');
+    }
+
+    $this->GridFactory->setZjednoduseneGrid($grid, $this->user->getIdentity()->prava, $this->user->getIdentity()->modul_poj, $defaultHodnoty, $this->BaseModel);
+
+    $groupByName = $grid->getSessionData('group_by_name') ?? true;
+    $fulltextSearch = $this->getParameter('fulltext');
+    
+    if ($fulltextSearch) {
+        $grid->setDataSource($this->BaseModel->getDataSourceWithFulltextSearch(
+            $fulltextSearch,
+            $grid->getSessionData('lekarnaVyber') ?? null, 
+            $grid->getSessionData('histori') ?? null
+        ));
+    } else {
+        if ($groupByName) {
+            $grid->setDataSource($this->BaseModel->getDataSourceGrouped(
                 $grid->getSessionData('lekarnaVyber') ?? null, 
                 $grid->getSessionData('histori') ?? null
             ));
         } else {
-            if ($groupByName) {
-                $grid->setDataSource($this->BaseModel->getDataSourceGrouped(
-                    $grid->getSessionData('lekarnaVyber') ?? null, 
-                    $grid->getSessionData('histori') ?? null
-                ));
-            } else {
-                $grid->setDataSource($this->BaseModel->getDataSourceZjednodusene(
-                    $grid->getSessionData('lekarnaVyber') ?? null, 
-                    $grid->getSessionData('histori') ?? null
-                ));
-            }
+            $grid->setDataSource($this->BaseModel->getDataSourceZjednodusene(
+                $grid->getSessionData('lekarnaVyber') ?? null, 
+                $grid->getSessionData('histori') ?? null
+            ));
         }
-        
-        return $grid;
     }
+    
+    return $grid;
+}
 
 public function createComponentDGDataGrid(string $name): Multiplier{
     error_log("=== CREATING DG DATA GRID ===");

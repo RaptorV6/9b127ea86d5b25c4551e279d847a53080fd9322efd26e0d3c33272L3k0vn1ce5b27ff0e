@@ -12,51 +12,47 @@ class ZjednoduseneGridFactory extends \App\Factory\BaseDataGridFactory {
         //parent::__construct($user, $db, $parameters);
     }
 
-    public function setZjednoduseneGrid(AkesoGrid $grid, $prava, $poj, $defaultHodnoty): AkesoGrid {
-        $grid->setPrimaryKey("ID_LEKY");
-        $grid->setStrictSessionFilterValues(false);
-        $grid->setColumnsHideable();
-        
-        //$grid->setDefaultSort(array('ID_LEKY' => 'DESC'));
+   // ✅ PŘIDEJ PARAMETR $baseModel
+public function setZjednoduseneGrid(AkesoGrid $grid, $prava, $poj, $defaultHodnoty, $baseModel = null): AkesoGrid {
+    $grid->setPrimaryKey("ID_LEKY");
+    $grid->setStrictSessionFilterValues(false);
+    $grid->setColumnsHideable();
+    
+    //$grid->setDefaultSort(array('ID_LEKY' => 'DESC'));
 
-        $grid->addColumnText('ORGANIZACE', 'Organizace')
-             ->setSortable()
-             ->setDefaultHide()  
-             ->setFilterMultiSelect(\App\LekyModule\Presenters\ZjednodusenePresenter::ORGANIZACE)
-             ->addAttribute('class', 'multiselect');
+    $grid->addColumnText('ORGANIZACE', 'Organizace')
+         ->setSortable()
+         ->setDefaultHide()  
+         ->setFilterMultiSelect(\App\LekyModule\Presenters\ZjednodusenePresenter::ORGANIZACE)
+         ->addAttribute('class', 'multiselect');
 
-        $grid->addColumnText('NAZ', 'Název')
-             ->setSortable()
-             ->setRenderer(function ($item) {
-                 return $item->NAZ;
-             })
-             ->setFilterText()
-             ->setSplitWordsSearch(true);
+    $grid->addColumnText('NAZ', 'Název')
+         ->setSortable()
+         ->setRenderer(function ($item) {
+             return $item->NAZ;
+         })
+         ->setFilterText()
+         ->setSplitWordsSearch(true);
 
-                $grid->addColumnText('BIOSIMOLAR', 'Biosimilar')
-             ->setSortable()
-             ->setFilterText();
+    $grid->addColumnText('BIOSIMOLAR', 'Biosimilar')
+         ->setSortable()
+         ->setFilterText();
 
-               $grid->addColumnText('ATC', 'ATC')
-             ->setSortable()
-             ->setReplacement(["" => "-"])
-             ->setFilterText()
-             ->setSplitWordsSearch(true);
+    $grid->addColumnText('ATC', 'ATC')
+         ->setSortable()
+         ->setReplacement(["" => "-"])
+         ->setFilterText()
+         ->setSplitWordsSearch(true);
 
-                     $grid->addColumnText('UCINNA_LATKA', 'Učinná látka')
-             ->setSortable()
-             ->setFilterText();
+    $grid->addColumnText('UCINNA_LATKA', 'Učinná látka')
+         ->setSortable()
+         ->setFilterText();
 
-        $grid->addColumnText('POZNAMKA', 'Poznámka pro všechny ZP')
-             ->setSortable()
-             ->setFilterText();
+    $grid->addColumnText('POZNAMKA', 'Poznámka pro všechny ZP')
+         ->setSortable()
+         ->setFilterText();
 
-
-
-     
-
-      
-  $pojistovnyNazvy = [
+    $pojistovnyNazvy = [
         '111' => '111 - VZP',
         '201' => '201 - VoZP', 
         '205' => '205 - ČPZP',
@@ -66,64 +62,82 @@ class ZjednoduseneGridFactory extends \App\Factory\BaseDataGridFactory {
         '213' => '213 - RBP'
     ];
    
-        $pojistovny = ['111', '201', '205', '207', '209', '211', '213'];
+    $pojistovny = ['111', '201', '205', '207', '209', '211', '213'];
 
-        foreach ($pojistovny as $value) {
+    foreach ($pojistovny as $value) {
         $nazev = $pojistovnyNazvy[$value] ?? $value; 
         
         $grid->addColumnText($value . '_STAV', $nazev . ' ')  
              ->setSortable()
-             ->setRenderer(function ($item) use ($value) {
-                     $el = Html::el('div');
-                     $el->class($item["poj" . $value . "_BARVA"]);
-                     if ($item[$value . "_STAV"] == 'Nasmlouváno') {
-                         $item[$value . "_NASMLOUVANO_OD"] = $item[$value . "_NASMLOUVANO_OD"] ?? "Nezadáno";
-                         $item[$value . "_STAV"] = $item[$value . "_STAV"] . ' ' . $item[$value . "_NASMLOUVANO_OD"];
-                     } else {
-                         $item[$value . "_STAV"] = $item[$value . "_STAV"] ?? "Nezadáno";
+             // ✅ UPRAVENÝ RENDERER S DG SKUPINAMI
+             ->setRenderer(function ($item) use ($value, $baseModel) {
+                 $el = Html::el('div');
+                 $el->class($item["poj" . $value . "_BARVA"]);
+                 
+                 // Základní stav a datum
+                 if ($item[$value . "_STAV"] == 'Nasmlouváno') {
+                     $item[$value . "_NASMLOUVANO_OD"] = $item[$value . "_NASMLOUVANO_OD"] ?? "Nezadáno";
+                     $stavText = $item[$value . "_STAV"] . ' ' . $item[$value . "_NASMLOUVANO_OD"];
+                 } else {
+                     $stavText = $item[$value . "_STAV"] ?? "Nezadáno";
+                 }
+                 
+                 // ✅ NAČTI DG SKUPINY PRO TENTO LÉK A POJIŠŤOVNU
+                 if ($baseModel && !empty($item->ID_LEKY)) {
+                     try {
+                         $dgSkupiny = $baseModel->getDgSkupinyProLekAPojistovnu($item->ID_LEKY, $value);
+                         if (!empty($dgSkupiny)) {
+                             $dgList = implode(', ', $dgSkupiny);
+                            $stavText .= '<br><hr style="margin: 2px 0; border: none; border-top: 1px solid #ddd;"><small">' . $dgList . '</small>';
+                         }
+                     } catch (\Exception $e) {
+                         // Pokud selže načítání DG, pokračuj bez nich
                      }
-                     if (!empty($item[$value . '_POZNAMKA'])) {
-                         $el->title($item[$value . '_POZNAMKA']);
-                         echo $el->addHtml(Html::el('img')->width('12%')->src('/Lekovnice/www/img/mark.png')->style('float:left;'));
-                     }
-                     $el->setText($item[$value . "_STAV"]);
-                     return $el;
-                 })
-                 ->setFilterText();
-        }
-
-       
-        $grid->setItemsDetail(true, "ID_LEKY")
-             ->setClass("btn btn-primary btn-sm ajax")
-             ->setTitle("Detail")
-             ->setText("Detail (Info)")
-             ->setIcon("arrow-down")
-             ->setTemplateParameters(["ID_LEKY"=>"ID_LEKY"])
-             ->setType("template")
-             ->setTemplate(__DIR__."/../templates/Zjednodusene/itemDetail.latte");
-
-      
-        if ($prava == '9' || $prava == '2') {
-            $grid->addToolbarButton("new")
-                 ->setText("Nový lék")
-                 ->setClass("btn btn-success")
-                 ->setIcon("plus")
-                 ->setTitle("Přidá nový lék");
-        }
-
-        $grid->addAction('sukl', 'Sukl', 'web')
-             ->addAttributes(["target" => "_blank"])
-             ->setClass("btn btn-info")
-             ->setIcon("info");
-
-        if ($prava == '9' || $prava == '2') {
-            $grid->addAction('edit', 'Editace', 'edit')
-                 ->setClass("btn btn-warning")
-                 ->setIcon("pencil");
-        }
-
-        return $grid;
+                 }
+                 
+                 // Poznámka jako tooltip
+                 if (!empty($item[$value . '_POZNAMKA'])) {
+                     $el->title($item[$value . '_POZNAMKA']);
+                     echo $el->addHtml(Html::el('img')->width('12%')->src('/Lekovnice/www/img/mark.png')->style('float:left;'));
+                 }
+                 
+                 $el->setHtml($stavText); // ✅ ZMĚNA z setText na setHtml kvůli <br>
+                 return $el;
+             })
+             ->setFilterText();
     }
+
+    // Zbytek metody zůstává stejný...
+    $grid->setItemsDetail(true, "ID_LEKY")
+         ->setClass("btn btn-primary btn-sm ajax")
+         ->setTitle("Detail")
+         ->setText("Detail (Info)")
+         ->setIcon("arrow-down")
+         ->setTemplateParameters(["ID_LEKY"=>"ID_LEKY"])
+         ->setType("template")
+         ->setTemplate(__DIR__."/../templates/Zjednodusene/itemDetail.latte");
+
+    if ($prava == '9' || $prava == '2') {
+        $grid->addToolbarButton("new")
+             ->setText("Nový lék")
+             ->setClass("btn btn-success")
+             ->setIcon("plus")
+             ->setTitle("Přidá nový lék");
+    }
+
+    $grid->addAction('sukl', 'Sukl', 'web')
+         ->addAttributes(["target" => "_blank"])
+         ->setClass("btn btn-info")
+         ->setIcon("info");
+
+    if ($prava == '9' || $prava == '2') {
+        $grid->addAction('edit', 'Editace', 'edit')
+             ->setClass("btn btn-warning")
+             ->setIcon("pencil");
+    }
+
+    return $grid;
+}
 
 public function setDGGrid(\Ublaboo\DataGrid\DataGrid $grid, $ID_LEKY, $presenter = null) {
     error_log("=== SET DG GRID START ===");
